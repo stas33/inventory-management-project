@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product
+from .models import Product, Order, STATUS
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -41,3 +41,30 @@ class ProductUpdateForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['category', 'prod_name', 'quantity']
+
+class OrderSearchForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['status']
+
+
+class CreateOrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['status']
+
+    def clean_status(self):
+        status = self.cleaned_data.get('status')
+        if not status:
+            raise forms.ValidationError('This field is required')
+        return status
+
+class OrderUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['status']
+
+class CustomerSearchForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['email']

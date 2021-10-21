@@ -11,4 +11,6 @@ class CreateProductAdmin(admin.ModelAdmin):
     search_fields = ['category', 'prod_name']
 
 admin.site.register(Product, CreateProductAdmin)
-admin.site.register(Category)
+#admin.site.register(Category)
+#admin.site.register(Customer)
+admin.site.register(Order)

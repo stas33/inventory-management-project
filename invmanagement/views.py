@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import *
-from .forms import CreateProductForm, ProductSearchForm, ProductUpdateForm, CreateUserForm
+from .forms import *
 from django.contrib import messages
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
-from .authentications import unauthenticated_user, allowed_users#, check_group
+from django.contrib.auth.models import Group, User
+from .authentications import unauthenticated_user, allowed_users
 
 # Create your views here.
 
@@ -38,11 +38,15 @@ def loginPage(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
+            group = None
+            if user.groups.exists():
+                group = request.user.groups.all()[0].name
+                if group == 'employee':
+                    return redirect('orders')
             return redirect('home')
         else:
             messages.info(request, 'Username OR password is incorrect')
@@ -71,22 +75,19 @@ def home(request):
 @allowed_users(allowed_roles=['admin', 'manager', 'customer'])
 def products(request):
     header = 'List of products'
-    update = "Update"
     form = ProductSearchForm(request.POST or None)
 
     queryset = Product.objects.all()
     context = {
-        "update": update,
         "form": form,
         "header": header,
         "queryset": queryset,
     }
     if request.method == 'POST':
         queryset = Product.objects.filter(category__icontains=form['category'].value(),
-                                        prod_name__icontains=form['prod_name'].value()
+                                          prod_name__icontains=form['prod_name'].value()
                                         )
         context = {
-            "update": update,
             "form": form,
             "header": header,
             "queryset": queryset,
@@ -135,3 +136,80 @@ def delete_product(request, pk):
         messages.success(request, 'Product deleted successfully!')
         return redirect('/products')
     return render(request, 'delete_product.html')
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['employee'])
+def orders(request):
+    header = 'List of orders'
+    form = OrderSearchForm(request.POST or None)
+    queryset = Order.objects.filter(user__groups__name='customer')
+    context = {
+        "form": form,
+        "header": header,
+        "queryset": queryset,
+    }
+    if request.method == 'POST':
+        #queryset = Order.objects.filter(user__in=form['user'].value(),
+         #                               user__groups__name='customer')
+        queryset = Order.objects.filter(status__contains=form['status'].value(),
+                                        user__groups__name='customer')
+        #form.fields['customer'].queryset = User.objects.filter()
+        context = {
+            "form": form,
+            "header": header,
+            "queryset": queryset,
+        }
+    return render(request, "list_orders.html", context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'employee'])
+def create_order(request):
+    form = CreateOrderForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Order created successfully!')
+        return redirect("/employee")
+    context = {
+        "form": form,
+        "title": "Create Product",
+    }
+    return render(request, "create_product.html", context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'employee'])
+def update_order(request, pk):
+    queryset = Order.objects.get(id=pk)
+    form = OrderUpdateForm(instance=queryset)
+    if request.method == 'POST':
+        form = OrderUpdateForm(request.POST, instance=queryset)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Order status updated successfully!')
+            return redirect('/employee')
+    context = {
+        'form':form
+    }
+    return render(request, 'create_order.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'employee'])
+def customers(request):
+    header = 'Registered customers'
+    form = CustomerSearchForm(request.POST or None)
+    #group = request.user.groups.all().name == "customer"
+    queryset = User.objects.filter(groups__name='customer')
+    context = {
+        "form": form,
+        "header": header,
+        "queryset": queryset,
+    }
+    if request.method == 'POST':
+        queryset = User.objects.filter(email__icontains=form['email'].value())
+        #form.fields['customer'].queryset = User.objects.filter()
+        context = {
+            "form": form,
+            "header": header,
+            "queryset": queryset,
+        }
+    return render(request, "list_customers.html", context)

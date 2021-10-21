@@ -25,6 +25,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('employee/', views.orders, name='orders'),
+    path('employee/customers', views.customers, name='customers'),
     #path('manager/', views.home, name='manager'),
     #path('customer/', views.customer_home, name='customer'),
 
@@ -32,6 +34,8 @@ urlpatterns = [
     path('create_product/', views.create_product, name='create_product'),
     path('update_product/<str:pk>/', views.update_product, name="update_product"),
     path('delete_product/<str:pk>/', views.delete_product, name="delete_product"),
+
+    path('update_order/<str:pk>/', views.update_order, name="update_order"),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
