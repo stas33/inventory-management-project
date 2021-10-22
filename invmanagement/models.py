@@ -87,10 +87,14 @@ class Order(models.Model):
     date = models.DateTimeField(default=datetime.datetime.today)
     status = models.CharField(max_length=50, null=True, blank=True, choices=STATUS)
     quantity = models.IntegerField(default='0', blank=False, null=True)
-    total_price = models.FloatField(max_length=50, null=True)
+    price = models.FloatField(max_length=50, null=True)
     phone = models.CharField(max_length=10, null=True)
     address = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return str(self.product)
+
+    def get_order_by_customer(user_id):
+        return Order.objects.filter(user=user_id,
+                                    user__groups__name='customer')
 

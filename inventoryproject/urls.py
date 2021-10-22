@@ -39,6 +39,7 @@ urlpatterns = [
     path('home_customer/', views.homePage_customers, name="homePage_customers"),
     path('cart/', views.cart, name="cart"),
     path('submit/', views.submit, name="submit"),
+    path('myorders/', views.orderpage, name='orderpage'),
     path('update_order/<str:pk>/', views.update_order, name="update_order"),
 ]
 

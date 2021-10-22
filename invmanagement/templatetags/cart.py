@@ -32,3 +32,7 @@ def total_cart_price(product, cart):
 @register.filter(name='currency')
 def currency(price):
     return "€" + str(price)
+
+@register.filter(name="multiply")
+def multiply(n1, n2):
+    return n1 * n2

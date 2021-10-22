@@ -145,7 +145,8 @@ def delete_product(request, pk):
 def orders(request):
     header = 'List of orders'
     form = OrderSearchForm(request.POST or None)
-    queryset = Order.objects.filter(user__groups__name='customer')
+    queryset = Order.objects.filter(user__groups__name='customer',
+                                    )
     context = {
         "form": form,
         "header": header,
@@ -268,7 +269,7 @@ def submit(request):
         cart = request.session.get("cart")
         products = Product.get_products_by_id(list(cart.keys()))
         for product in products:
-            order = Order(user=User(id=user), product=product, total_price=product.price, address=address,
+            order = Order(user=User(id=user), product=product, price=product.price, address=address,
                           phone=phone, quantity=cart.get(str(product.id)), status="Pending")
             order.save()
 
@@ -277,3 +278,12 @@ def submit(request):
         return redirect("cart")
     else:
         return render(request, 'submit_order.html')
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def orderpage(request):
+    user = request.user.id
+    order = Order.get_order_by_customer(user)
+    print(order)
+    return render(request, 'customer_orders.html', {'order': order})

@@ -65,6 +65,7 @@ class OrderUpdateForm(forms.ModelForm):
         fields = ['status']
 
 class CustomerSearchForm(forms.ModelForm):
+    email = forms.CharField(required=True, max_length=30)
     class Meta:
         model = User
         fields = ['email']

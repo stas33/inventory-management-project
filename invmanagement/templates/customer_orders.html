@@ -1,5 +1,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
+{% load cart %}
 
 <!doctype html>
 <html lang="en">
@@ -48,68 +49,41 @@
     <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
 </head>
 
-<body id="bg" style="background-color: lightgrey;">
+<body id="bg" style="background-repeat: no-repeat; background-size: cover;  background-image: url('{% static "img/tech.jpeg"%}')">
 {% include 'navbar.html' %}
 
 <main role="main" class="container">
-    {% if messages %}
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-3">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}" role="alert">
-                        <p>{{ message }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-
-        </div>
-    {% endif %}
-    <div class="jumbotron">
-        <div class="header">{{ header }}</div>
-
-        <form method='POST' action=''>{% csrf_token %}
-            {{ form|crispy }}
-            <input type="submit" value='Search'/>
-        </form>
-        <br>
-
-        <div class="display_table">
-            <table class='table'>
-                <thead>
+    <p class="display-4" style="color:white;">My Orders</p>
+    <hr style="background: white;">
+    <div class="display_table">
+        <table class='table'>
+            <thead>
+            <tr>
+                <th>COUNT</th>
+                <th>PRODUCT</th>
+                <th>CUSTOMER</th>
+                <th>QUANTITY</th>
+                <th>STATUS</th>
+                <th>DATE SUBMITTED</th>
+                <th>TOTAL PRICE</th>
+            </tr>
+            </thead>
+            {% for instance in order %}
                 <tr>
-                    <th>COUNT</th>
-                    <th>CATEGORY</th>
-                    <th>PRODUCT NAME</th>
-                    <th>QUANTITY</th>
-                    <th>AVAILABILITY</th>
-                    {% if request.user.groups.all.0.name != "customer" %}
-                        <th>LAST UPDATED</th>
-                        <th></th>
-                        <th></th>
-                    {% endif %}
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ instance.product }}</td>
+                    <td>{{ instance.user }}</td>
+                    <td>{{ instance.quantity }}</td>
+                    <td>{{ instance.status }}</td>
+                    <td>{{ instance.date }}</td>
+                    <td>{{ instance.quantity|multiply:instance.price|currency }}</td>
                 </tr>
-                </thead>
-                {% for instance in queryset %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ instance.category }}</td>
-                        <td>{{ instance.prod_name }}</td>
-                        <td>{{ instance.quantity }}</td>
-                        <td>{{ instance.availability }}</td>
-                        {% if request.user.groups.all.0.name != "customer" %}
-                            <td>{{ instance.last_updated }}</td>
-                            <td><a href="{% url 'update_product' instance.id %}"><img
-                                    src="{% static 'img/pencil-fill.svg' %}"></a></td>
-                            <td><a href="{% url 'delete_product' instance.id %}"><img
-                                    src="{% static 'img/trash.svg' %}"></a></td>
-                        {% endif %}
-
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
+            {% endfor %}
+        </table>
+    </div>
     </div>
 </main>
+
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -122,4 +96,3 @@
 
 </body>
 </html>
-
