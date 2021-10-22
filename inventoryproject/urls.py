@@ -35,6 +35,10 @@ urlpatterns = [
     path('update_product/<str:pk>/', views.update_product, name="update_product"),
     path('delete_product/<str:pk>/', views.delete_product, name="delete_product"),
 
+    #path('create_order/', views.create_order, name="create_order"),
+    path('home_customer/', views.homePage_customers, name="homePage_customers"),
+    path('cart/', views.cart, name="cart"),
+    path('submit/', views.submit, name="submit"),
     path('update_order/<str:pk>/', views.update_order, name="update_order"),
 ]
 

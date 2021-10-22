@@ -1,5 +1,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
+{% load cart %}
 
 <!doctype html>
 <html lang="en">
@@ -51,65 +52,53 @@
 <body id="bg">
 {% include 'navbar.html' %}
 
-<main role="main" class="container">
-    {% if messages %}
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-3">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}" role="alert">
-                        <p>{{ message }}</p>
+
+<div class="container mt-4">
+    <div class="row">
+        <div id="products" class="col-lg-8">
+            <div class="row mx-auto">
+                {% for product in products %}
+                    <div class="card mx-auto mb-4 bg-dark" style="width: 13.5rem;">
+                        <div class="card-body text-white">
+                            <p class="card-title">{{ product.prod_name }}</p>
+                            <p class="card-text"><i class="fas fa-dollar-sign"
+                                                    style="margin-right: 2px; font-size: 15px;"></i>{{ product.price }}
+                            </p>
+                        </div>
+                        <div class="card-footer p-0 no-gutters">
+                            {% if product|is_in_cart:request.session.cart %}
+                                <div class="row no-gutters">
+                                    <form action="/home_customer/" method="post" class="col-lg-2">
+                                        {% csrf_token %}
+                                        <input hidden type="text" value="{{ product.id }}" name="product">
+                                        <input hidden type="text" value="True" name="remove">
+                                        <input type="submit" value="-" class="btn btn-dark btn-block">
+                                    </form>
+                                    <div class=" text-center mt-2 text-white col">{{ product|cart_quantity:request.session.cart }}
+                                        in Cart
+                                    </div>
+                                    <form action="/home_customer/" method="post" class="col-lg-2">
+                                        {% csrf_token %}
+                                        <input hidden type="text" value="{{ product.id }}" name="product">
+                                        <input type="submit" value="+" class="btn btn-dark btn-block">
+                                    </form>
+                                </div>
+                            {% else %}
+                                <form method="post" action="/home_customer/" class="btn btn-block">
+                                    {% csrf_token %}
+                                    <input hidden type="text" value="{{ product.id }}" name="product">
+                                    <input type="submit" class="btn btn-primary" value="Add to Cart">
+                                </form>
+                            {% endif %}
+                        </div>
                     </div>
                 {% endfor %}
             </div>
-
-        </div>
-    {% endif %}
-    <div class="jumbotron">
-        <div class="header">{{ header }}</div>
-
-        <form method='POST' action=''>{% csrf_token %}
-            {{ form|crispy }}
-            <input type="submit" value='Search'/>
-        </form>
-        <br>
-
-        <div class="display_table">
-            <table class='table'>
-                <thead>
-                <tr>
-                    <th>COUNT</th>
-                    <th>CATEGORY</th>
-                    <th>PRODUCT NAME</th>
-                    <th>QUANTITY</th>
-                    <th>AVAILABILITY</th>
-                    {% if request.user.groups.all.0.name != "customer" %}
-                        <th>LAST UPDATED</th>
-                        <th></th>
-                        <th></th>
-                    {% endif %}
-                </tr>
-                </thead>
-                {% for instance in queryset %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ instance.category }}</td>
-                        <td>{{ instance.prod_name }}</td>
-                        <td>{{ instance.quantity }}</td>
-                        <td>{{ instance.availability }}</td>
-                        {% if request.user.groups.all.0.name != "customer" %}
-                            <td>{{ instance.last_updated }}</td>
-                            <td><a href="{% url 'update_product' instance.id %}"><img
-                                    src="{% static 'img/pencil-fill.svg' %}"></a></td>
-                            <td><a href="{% url 'delete_product' instance.id %}"><img
-                                    src="{% static 'img/trash.svg' %}"></a></td>
-                        {% endif %}
-
-                    </tr>
-                {% endfor %}
-            </table>
         </div>
     </div>
-</main>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -122,4 +111,3 @@
 
 </body>
 </html>
-

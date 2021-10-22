@@ -47,6 +47,8 @@ def loginPage(request):
                 group = request.user.groups.all()[0].name
                 if group == 'employee':
                     return redirect('orders')
+                if group == 'customer':
+                    return redirect('homePage_customers')
             return redirect('home')
         else:
             messages.info(request, 'Username OR password is incorrect')
@@ -163,7 +165,7 @@ def orders(request):
     return render(request, "list_orders.html", context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'employee'])
+@allowed_users(allowed_roles=['admin', 'employee', 'customer'])
 def create_order(request):
     form = CreateOrderForm(request.POST or None)
     if form.is_valid():
@@ -174,7 +176,7 @@ def create_order(request):
         "form": form,
         "title": "Create Product",
     }
-    return render(request, "create_product.html", context)
+    return render(request, "create_order.html", context)
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'employee'])
@@ -213,3 +215,65 @@ def customers(request):
             "queryset": queryset,
         }
     return render(request, "list_customers.html", context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def homePage_customers(request):
+    if request.method == 'POST':
+        product = request.POST.get('product')
+        remove = request.POST.get('remove')
+        cart = request.session.get('cart')
+        if cart:
+            quantity = cart.get(product)
+            if quantity:
+                if remove:
+                    if quantity <= 1:
+                        cart.pop(product)
+                    else:
+                        cart[product] = quantity - 1
+                else:
+                    cart[product] = quantity + 1
+            else:
+                cart[product] = 1
+        else:
+            cart = {}
+            cart[product] = 1
+
+        request.session['cart'] = cart
+        print(request.session['cart'])
+        return redirect('homePage_customers')
+
+    else:
+        products = Product.objects.all()
+        context = {'products': products}
+        return render(request, 'home_customer.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def cart(request):
+    cart_product_id = list(request.session.get('cart').keys())
+    cart_product = Product.get_products_by_id(cart_product_id)
+    return render(request, 'cart.html', {'cart_product': cart_product})
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['customer'])
+def submit(request):
+    if request.method == "POST":
+        address = request.POST.get("address")
+        phone = request.POST.get("phone")
+        user = request.session.get("username")
+        customer = request.session.get("customer")
+        cart = request.session.get("cart")
+        products = Product.get_products_by_id(list(cart.keys()))
+        for product in products:
+            order = Order(customer=Customer(id=customer), product=product, total_price=product.price, address=address,
+                          phone=phone, quantity=cart.get(str(product.id)), status="Pending")
+            order.save()
+
+        request.session['cart'] = {}
+
+        return redirect("cart")
+    else:
+        return render(request, 'submit_order.html')
