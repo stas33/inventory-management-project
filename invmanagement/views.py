@@ -263,12 +263,12 @@ def submit(request):
     if request.method == "POST":
         address = request.POST.get("address")
         phone = request.POST.get("phone")
-        user = request.session.get("username")
-        customer = request.session.get("customer")
+        user = request.user.id
+        #customer = request.session.get("customer")
         cart = request.session.get("cart")
         products = Product.get_products_by_id(list(cart.keys()))
         for product in products:
-            order = Order(customer=Customer(id=customer), product=product, total_price=product.price, address=address,
+            order = Order(user=User(id=user), product=product, total_price=product.price, address=address,
                           phone=phone, quantity=cart.get(str(product.id)), status="Pending")
             order.save()
 

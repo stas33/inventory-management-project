@@ -49,12 +49,12 @@
     <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
 </head>
 
-<body id="bg">
+<body id="bg" style="background-repeat: no-repeat; background-size: cover;  background-image: url('{% static "img/tech.jpeg"%}')">
 {% include 'navbar.html' %}
 
-<div class="jumbotron">
-    <p class="display-4">My Cart</p>
-    <hr style="background: white;">
+
+    <p class="display-4"  style="color:white; text-align: left; padding-left: 1cm">My Cart</p>
+    <hr style="background: black; ">
     <div class="display_table">
         <table class='table'>
             <thead>
@@ -93,7 +93,7 @@
             <a href="{% url 'submit' %}" class="btn btn-primary float-right">Submit order</a>.
         </div>
     </div>
-</div>
+
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

@@ -49,11 +49,12 @@
     <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
 </head>
 
-<body id="bg">
+<body id="bg" style="background-repeat: no-repeat; background-size: cover;  background-image: url('{% static "img/tech.jpeg"%}')">
 {% include 'navbar.html' %}
 
 
 <div class="container mt-4">
+    <p class="display-4"  style="color:white; text-align: left;">Available products</p>
     <div class="row">
         <div id="products" class="col-lg-8">
             <div class="row mx-auto">
@@ -62,7 +63,7 @@
                         <div class="card-body text-white">
                             <p class="card-title">{{ product.prod_name }}</p>
                             <p class="card-text"><i class="fas fa-dollar-sign"
-                                                    style="margin-right: 2px; font-size: 15px;"></i>{{ product.price }}
+                                                    style="margin-right: 2px; font-size: 15px;"></i>{{ product.price|currency }}
                             </p>
                         </div>
                         <div class="card-footer p-0 no-gutters">
