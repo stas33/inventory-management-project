@@ -83,6 +83,7 @@
                     <th>USERNAME</th>
                     <th>EMAIL</th>
                     <th>DATE JOINED</th>
+                    <th></th>
                 </tr>
                 </thead>
                 {% for instance in queryset %}
@@ -93,6 +94,8 @@
                         <td>{{ instance.username }}</td>
                         <td>{{ instance.email }}</td>
                         <td>{{ instance.date_joined }}</td>
+                        <td><a href="{% url 'update_employee' instance.id %}"><img
+                                    src="{% static 'img/pencil-fill.svg' %}"></a></td>
                     </tr>
                 {% endfor %}
             </table>

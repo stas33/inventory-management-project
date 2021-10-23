@@ -27,15 +27,14 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('employee/', views.orders, name='orders'),
     path('employee/customers', views.customers, name='customers'),
-    #path('manager/', views.home, name='manager'),
-    #path('customer/', views.customer_home, name='customer'),
 
     path('products/', views.products, name='products'),
     path('create_product/', views.create_product, name='create_product'),
     path('update_product/<str:pk>/', views.update_product, name="update_product"),
     path('delete_product/<str:pk>/', views.delete_product, name="delete_product"),
+    path('employees/', views.employees, name="employees"),
+    path('update_employee/<str:pk>/', views.update_employee, name="update_employee"),
 
-    #path('create_order/', views.create_order, name="create_order"),
     path('home_customer/', views.homePage_customers, name="homePage_customers"),
     path('cart/', views.cart, name="cart"),
     path('submit/', views.submit, name="submit"),

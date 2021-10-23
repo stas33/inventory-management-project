@@ -69,3 +69,14 @@ class CustomerSearchForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email']
+
+class EmployeeSearchForm(forms.ModelForm):
+    username = forms.CharField(required=True, max_length=20)
+    class Meta:
+        model = User
+        fields = ['username']
+
+class EmployeeUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'email']
