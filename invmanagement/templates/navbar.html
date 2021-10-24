@@ -16,26 +16,20 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-            {% if request.user.groups.all.0.name == "manager" %}
+            {% if request.user.groups.all.0.name != "customer" %}
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
             {% endif %}
-            {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "manager" %}
+            {% if request.user.groups.all.0.name == "manager" %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/products">Products list</a>
-                </li>
-            {% endif %}
-
-            {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "manager" %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="/create_product">Add product</a>
+                    <a class="nav-link" href="/products">Products list (manager)</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/employees">Employees list</a>
                 </li>
             {% endif %}
-            {% if request.user.groups.all.0.name == "employee" or request.user.groups.all.0.name == "admin" %}
+            {% if request.user.groups.all.0.name == "employee" %}
                 <li class="nav-item active">
                     <a class="nav-link" href="/employee">Orders list</a>
                 </li>
@@ -43,9 +37,9 @@
                     <a class="nav-link" href="/employee/customers">Customers information</a>
                 </li>
             {% endif %}
-            {% if request.user.groups.all.0.name == "customer" or request.user.groups.all.0.name == "admin" %}
+            {% if request.user.groups.all.0.name == "customer" %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/home_customer">Products list</a>
+                    <a class="nav-link" href="/home_customer">Products list (customer)</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/cart">My Cart</a>

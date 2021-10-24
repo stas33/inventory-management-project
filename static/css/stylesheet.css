@@ -1,7 +1,7 @@
 
-
-body {
+body{
     background-color: #34eb6b;
+    min-height: 100vh;
 }
 
 /*Align the title to the center of the page*/
@@ -57,3 +57,10 @@ th {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+.container{
+    margin: 0;
+    display: flex;
+    min-height: 100%;
+}
+

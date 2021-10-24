@@ -46,10 +46,8 @@ def loginPage(request):
             group = None
             if user.groups.exists():
                 group = request.user.groups.all()[0].name
-                if group == 'employee':
-                    return redirect('orders')
-                if group == 'customer':
-                    return redirect('homePage_customers')
+                #if group == 'customer':
+                #    return redirect('homePage_customers')
             return redirect('home')
         else:
             messages.info(request, 'Username OR password is incorrect')
@@ -64,9 +62,8 @@ def logoutUser(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager'])
 def home(request):
-    title = "Welcome: This is the home page!"
+    title = "Welcome: This is the home page of the inventory management system!"
     context = {
         "title": title,
         # "form": form,

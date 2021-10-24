@@ -89,9 +89,11 @@
             </th>
             </tfoot> -->
         </table>
+    {% if cart_product|length != 0 %}
         <div class="mb-5">
             <a href="{% url 'submit' %}" class="btn btn-primary float-right">Proceed to order placement</a>.
         </div>
+    {% endif %}
     </div>
 
 
@@ -105,5 +107,6 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 
+{% include "footer.html" %}
 </body>
 </html>
