@@ -52,44 +52,159 @@
     <body id="bg"
           style="background-repeat: no-repeat; background-size: cover;  background-image: url('{% static "img/tech.jpeg" %}')">
 {% else %}
-    <body id="bg" style="background-color: lightgrey">
+    <body id="bg" style="background-color: lightslategrey">
 {% endif %}
 {% include 'navbar.html' %}
 
 <main role="main" class="container">
     {% if request.user.groups.all.0.name == "customer" %}
-    <div class="jumbotron-fluid" style="color: white">
+        <div class="jumbotron-fluid" style="color: white">
     {% else %}
-    <div class="jumbotron-fluid">
+        <div class="jumbotron-fluid">
     {% endif %}
-        <br>
-        <h1>{{ title }} </h1>
-        <br><p class="lead">Quick navigation:</p>
-        {% if request.user.groups.all.0.name == "admin" %}
-            <a class="btn btn-lg btn-primary" href="/products" role="button">Products list (manager) &raquo;</a>
-            <a class="btn btn-lg btn-primary" href="/employees" role="button" style="margin-left: 20px">Employees list &raquo;</a>
-            <a class="btn btn-lg btn-primary" href="/employee" role="button" style="margin-left: 20px">Orders list &raquo;</a>
-            <a class="btn btn-lg btn-primary" href="/employee/customers" role="button" style="margin-left: 20px">Customers information &raquo;</a>
+    <br>
+    <h1 style="color: white">{{ title }} </h1>
+    <br>
+    {% if request.user.groups.all.0.name == "admin" %}
+        <div class="row mx-auto">
+            <h4 style="color: white">Quick navigation:</h4>
+            <a class="btn btn-lg bg-info" href="/products" role="button" style="margin-bottom: 20px; margin-left: 50px">Products
+                list (manager) &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/employees" role="button"
+               style="margin-bottom: 20px; margin-left: 20px">Employees
+                list
+                &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/employee" role="button" style="margin-bottom: 20px; margin-left: 20px">Orders
+                list
+                &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/employee/customers" role="button"
+               style="margin-top: 15px; margin-left: 235px; margin-bottom: 30px">Customers
+                details &raquo;</a>
             <br>
             <br>
-            <a class="btn btn-lg btn-primary" href="/home_customer" role="button">Products list (customer) &raquo;</a>
-        {% endif %}
-        {% if request.user.groups.all.0.name == "manager" %}
-            <a class="btn btn-lg btn-primary" href="/products" role="button">Products list (manager) &raquo;</a>
-            <a class="btn btn-lg btn-primary" href="/employees" role="button" style="margin-left: 20px">Employees list &raquo;</a>
-        {% endif %}
-        {% if request.user.groups.all.0.name == "employee" %}
-            <a class="btn btn-lg btn-primary" href="/employee" role="button">Orders list &raquo;</a>
-            <a class="btn btn-lg btn-primary" href="/employee/customers" role="button" style="margin-left: 20px">Customers information &raquo;</a>
-        {% endif %}
-        {% if request.user.groups.all.0.name == "customer" %}
-            <a class="btn btn-lg btn-primary" href="/home_customer" role="button" style="margin-left: 200px; margin-top: -80px">Products list (customer) &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/home_customer" role="button"
+               style="margin-top: 15px; margin-left: 20px; margin-bottom: 30px ">Products list (customer) &raquo;</a>
+        </div>
+    {% endif %}
+    {% if request.user.groups.all.0.name == "manager" %}
+        <div class="row mx-auto">
+            <h4 style="color: white">Quick navigation:</h4>
+            <a class="btn btn-lg bg-info" href="/products" role="button"
+               style="margin-bottom: 40px; margin-left: 50px;">Products
+                list (manager) &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/employees" role="button"
+               style="margin-bottom: 40px; margin-left: 20px">Employees
+                list
+                &raquo;</a>
+        </div>
+    {% endif %}
+    {% if request.user.groups.all.0.name == "employee" %}
+        <div class="row mx-auto">
+            <h4 style="color: white">Quick navigation:</h4>
+            <a class="btn btn-lg bg-info" href="/employee" role="button" style="margin-bottom: 40px; margin-left: 50px">Orders
+                list &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/employee/customers" role="button"
+               style="margin-bottom: 40px; margin-left: 50px">Customers
+                details &raquo;</a>
+        </div>
+    {% endif %}
+    {% if request.user.groups.all.0.name == "customer" %}
+        <div class="row mx-auto">
+        <h4 style="color: white">Quick navigation:</h4>
+            <a class="btn btn-lg bg-info" href="/home_customer" role="button"
+               style="margin-bottom: 40px; margin-left: 50px">Products list (customer) &raquo;</a>
             <br>
-            <br><a class="btn btn-lg btn-primary" href="/cart" role="button" style="margin-left: 200px; margin-top: -30px">My Cart &raquo;</a>
             <br>
-            <br><a class="btn btn-lg btn-primary" href="/myorders" role="button" style="margin-left: 200px; margin-top: 0px">My Orders &raquo;</a>
-        {% endif %}
-    </div>
+            <a class="btn btn-lg bg-info" href="/cart" role="button" style="margin-bottom: 40px; margin-left: 50px">My
+                Cart &raquo;</a>
+            <br>
+            <br>
+            <a class="btn btn-lg bg-info" href="/myorders" role="button" style="margin-bottom: 40px; margin-left: 50px">My
+                Orders &raquo;</a>
+        </div>
+    {% endif %}
+
+
+    {% if request.user.groups.all.0.name != "customer" %}
+        <div class="flex-column">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h4 style="color: white; margin-left: 10px">Statistics</h4>
+                </div>
+                <div class="card-body" style="background-color: lightgrey">
+                    <div class="row mx-auto">
+                        <div class="col-md-4">
+                            {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "employee" %}
+                                <a class="text-decoration-none text-dark" href="/employee">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Total orders <i class="fas fa-users"></i></h4>
+                                        <h3>{{ order_count }}</h3>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <div class="card my-card shadow text-center p-3">
+                                    <h4>Total orders <i class="fas fa-users"></i></h4>
+                                    <h3>{{ order_count }}</h3>
+                                </div>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "manager" %}
+                                <a class="text-decoration-none text-dark" href="/products">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Total products<i class="fas fa-box"></i></h4>
+                                        <h3>{{ product_count }}</h3>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <div class="card my-card shadow text-center p-3">
+                                    <h4>Total products<i class="fas fa-box"></i></h4>
+                                    <h3>{{ product_count }}</h3>
+                                </div>
+                                </a>
+                            {% endif %}
+                            <br>
+                        </div>
+
+                        <div class="col-4">
+                            {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "manager" %}
+                                <a class="text-decoration-none text-dark" href="/employees">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Employees<i class="fas fa-box"></i></h4>
+                                        <h3>{{ employee_count }}</h3>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <div class="card my-card shadow text-center p-3">
+                                    <h4>Employees<i class="fas fa-box"></i></h4>
+                                    <h3>{{ employee_count }}</h3>
+                                </div>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "employee" %}
+                                <a class="text-decoration-none text-dark" href="/employee/customers">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Registered customers <i class="fas fa-shipping-fast"></i></h4>
+                                        <h3>{{ customer_count }}</h3>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <div class="card my-card shadow text-center p-3">
+                                    <h4>Registered customers <i class="fas fa-shipping-fast"></i></h4>
+                                    <h3>{{ customer_count }}</h3>
+                                </div>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 </main>
 
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

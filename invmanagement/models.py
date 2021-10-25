@@ -22,10 +22,15 @@ STATUS = (
         ('Delivered', 'Delivered'),
     )
 
-#class Category(models.Model):
-#    name = models.CharField(max_length=50, blank=True, null=True, choices=category_choice)
-#    def __str__(self):
-#        return self.name
+class Company(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    address = models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(max_length=10, blank=True, null=True)
+    address = models.CharField(max_length=100, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):

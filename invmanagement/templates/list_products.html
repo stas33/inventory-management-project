@@ -48,10 +48,10 @@
     <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
 </head>
 
-<body id="bg" class="bg" style="background-color: lightgrey;">
+<body id="bg" class="bg" style="background-color: lightslategrey">
 {% include 'navbar.html' %}
 
-<main role="main" class="container">
+<main role="main" class="flex-column" style="margin-right: 40px; margin-left: 40px; margin-top: 10px">
     {% if messages %}
         <div class="row">
             <div class="col-sm-6 col-sm-offset-3">
@@ -64,7 +64,7 @@
 
         </div>
     {% endif %}
-    <div class="jumbotron">
+    <div class="jumbotron" style="background-color: lightgrey">
         <div class="header">{{ header }}</div>
 
         <form method='POST' action=''>{% csrf_token %}
@@ -73,7 +73,7 @@
         </form>
         <br>
         <div class="mb-5">
-            <a href="/create_product" class="btn btn-primary float-left">Add a new product</a>.
+            <a href="/create_product" class="btn btn-primary float-right">Add a new product</a>.
         </div>
         <div class="display_table">
             <table class='table'>

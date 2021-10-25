@@ -64,9 +64,20 @@ def logoutUser(request):
 @login_required(login_url='login')
 def home(request):
     title = "Welcome: This is the home page of the inventory management system!"
+    product = Product.objects.all()
+    product_count = product.count()
+    order = Order.objects.all()
+    order_count = order.count()
+    customer = User.objects.filter(groups=1)
+    customer_count = customer.count()
+    employee = User.objects.filter(groups=2)
+    employee_count = employee.count()
     context = {
         "title": title,
-        # "form": form,
+        "product_count": product_count,
+        "order_count": order_count,
+        "customer_count": customer_count,
+        "employee_count": employee_count
     }
     return render(request, "home.html", context)
 
@@ -113,6 +124,7 @@ def create_product(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
 def update_product(request, pk):
+    title = "Update product"
     queryset = Product.objects.get(id=pk)
     form = ProductUpdateForm(instance=queryset)
     if request.method == 'POST':
@@ -122,6 +134,7 @@ def update_product(request, pk):
             messages.success(request, 'Product updated successfully!')
             return redirect('/products')
     context = {
+        'title': title,
         'form': form
     }
     return render(request, 'create_product.html', context)
@@ -164,6 +177,7 @@ def employees(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
 def update_employee(request, pk):
+    title = "Update Employee"
     queryset = User.objects.get(id=pk)
     form = EmployeeUpdateForm(instance=queryset)
     if request.method == 'POST':
@@ -173,6 +187,7 @@ def update_employee(request, pk):
             messages.success(request, 'Employee updated successfully!')
             return redirect('/employees')
     context = {
+        'title': title,
         'form': form
     }
     return render(request, 'update_employee.html', context)
@@ -222,6 +237,7 @@ def create_order(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'employee'])
 def update_order(request, pk):
+    title = "Update order status"
     queryset = Order.objects.get(id=pk)
     form = OrderUpdateForm(instance=queryset)
     if request.method == 'POST':
@@ -231,6 +247,7 @@ def update_order(request, pk):
             messages.success(request, 'Order status updated successfully!')
             return redirect('/employee')
     context = {
+        'title': title,
         'form': form
     }
     return render(request, 'create_order.html', context)
