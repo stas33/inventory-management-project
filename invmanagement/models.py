@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import datetime
+from django.contrib.auth.models import User
 
 User = get_user_model()
 
@@ -21,17 +22,6 @@ STATUS = (
         ('Processing', 'Processing'),
         ('Delivered', 'Delivered'),
     )
-
-class Company(models.Model):
-    name = models.CharField(max_length=50, blank=True, null=True)
-    address = models.CharField(max_length=50, blank=True, null=True)
-    phone = models.CharField(max_length=10, blank=True, null=True)
-    address = models.CharField(max_length=100, blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
 
 class Product(models.Model):
     category = models.CharField(max_length=50, blank=True, choices=category_choice)
@@ -102,4 +92,18 @@ class Order(models.Model):
     def get_order_by_customer(user_id):
         return Order.objects.filter(user=user_id,
                                     user__groups__name='customer')
+
+class Company(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    address = models.CharField(max_length=100, null=True)
+    postcode = models.IntegerField(default='0', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+class Employee(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
 

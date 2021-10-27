@@ -33,7 +33,11 @@ urlpatterns = [
     path('update_product/<str:pk>/', views.update_product, name="update_product"),
     path('delete_product/<str:pk>/', views.delete_product, name="delete_product"),
     path('employees/', views.employees, name="employees"),
+    path('create_employee/', views.create_employee, name='create_employee'),
     path('update_employee/<str:pk>/', views.update_employee, name="update_employee"),
+    path('companies/', views.company, name="company"),
+    path('update_company/<str:pk>/', views.update_company, name="update_company"),
+    path('delete_company/<str:pk>/', views.delete_company, name="delete_company"),
 
     path('home_customer/', views.homePage_customers, name="homePage_customers"),
     path('cart/', views.cart, name="cart"),

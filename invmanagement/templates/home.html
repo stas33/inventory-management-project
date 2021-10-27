@@ -84,6 +84,8 @@
             <br>
             <a class="btn btn-lg bg-info" href="/home_customer" role="button"
                style="margin-top: 15px; margin-left: 20px; margin-bottom: 30px ">Products list (customer) &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/companies" role="button"
+               style="margin-top: 15px; margin-left: 20px; margin-bottom: 30px ">Company details &raquo;</a>
         </div>
     {% endif %}
     {% if request.user.groups.all.0.name == "manager" %}
@@ -96,6 +98,8 @@
                style="margin-bottom: 40px; margin-left: 20px">Employees
                 list
                 &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/companies" role="button"
+               style="margin-left: 20px; margin-bottom: 40px ">Company details &raquo;</a>
         </div>
     {% endif %}
     {% if request.user.groups.all.0.name == "employee" %}
@@ -195,6 +199,22 @@
                                 <div class="card my-card shadow text-center p-3">
                                     <h4>Registered customers <i class="fas fa-shipping-fast"></i></h4>
                                     <h3>{{ customer_count }}</h3>
+                                </div>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "manager" %}
+                                <a class="text-decoration-none text-dark" href="/companies">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Companies <i class="fas fa-shipping-fast"></i></h4>
+                                        <h3>{{ company_count }}</h3>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <div class="card my-card shadow text-center p-3">
+                                    <h4>Companies <i class="fas fa-shipping-fast"></i></h4>
+                                    <h3>{{ company_count }}</h3>
                                 </div>
                                 </a>
                             {% endif %}

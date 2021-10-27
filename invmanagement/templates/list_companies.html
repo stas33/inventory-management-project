@@ -72,40 +72,31 @@
             <input type="submit" value='Search'/>
         </form>
         <br>
-        <div class="mb-5">
-            <a href="/create_product" class="btn btn-primary float-right" style="margin-top: -15px">Add a new product</a>
-        </div>
+
         <div class="display_table">
             <table class='table'>
                 <thead>
                 <tr>
-                    <th>COUNT</th>
-                    <th>CATEGORY</th>
-                    <th>PRODUCT NAME</th>
-                    <th>QUANTITY</th>
-                    <th>AVAILABILITY</th>
-                    {% if request.user.groups.all.0.name != "customer" %}
-                        <th>LAST UPDATED</th>
-                        <th></th>
-                        <th></th>
-                    {% endif %}
+                    <th>COUNTER</th>
+                    <th>NAME</th>
+                    <th>DATE_ADDED</th>
+                    <th>ADDRESS</th>
+                    <th>POSTCODE</th>
+                    <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 {% for instance in queryset %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ instance.category }}</td>
-                        <td>{{ instance.prod_name }}</td>
-                        <td>{{ instance.quantity }}</td>
-                        <td>{{ instance.availability }}</td>
-                        {% if request.user.groups.all.0.name != "customer" %}
-                            <td>{{ instance.last_updated }}</td>
-                            <td><a href="{% url 'update_product' instance.id %}"><img
-                                    src="{% static 'img/pencil-fill.svg' %}"></a></td>
-                            <td><a href="{% url 'delete_product' instance.id %}"><img
-                                    src="{% static 'img/trash.svg' %}"></a></td>
-                        {% endif %}
-
+                        <td>{{ instance.name }}</td>
+                        <td>{{ instance.date_added }}</td>
+                        <td>{{ instance.address }}</td>
+                        <td>{{ instance.postcode }}</td>
+                        <td><a href="{% url 'update_company' instance.id %}"><img
+                                src="{% static 'img/pencil-fill.svg' %}"></a></td>
+                        <td><a href="{% url 'delete_company' instance.id %}"><img
+                                src="{% static 'img/trash.svg' %}"></a></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -126,4 +117,3 @@
 {% include "footer.html" %}
 </body>
 </html>
-

@@ -53,7 +53,7 @@
           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form> -->
-        <span class="hello-msg">Logged in user: {{ request.user }}</span>
+        <span class="hello-msg">Logged in user: {{ request.user }} ({{ request.user.groups.all.0.name }})</span>
         <span><a class="hello-msg" href="{% url 'logout' %}">Logout</a></span>
     </div>
 </nav>

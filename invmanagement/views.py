@@ -72,12 +72,15 @@ def home(request):
     customer_count = customer.count()
     employee = User.objects.filter(groups=2)
     employee_count = employee.count()
+    company = Company.objects.all()
+    company_count = company.count()
     context = {
         "title": title,
         "product_count": product_count,
         "order_count": order_count,
         "customer_count": customer_count,
-        "employee_count": employee_count
+        "employee_count": employee_count,
+        "company_count": company_count
     }
     return render(request, "home.html", context)
 
@@ -158,6 +161,7 @@ def employees(request):
     form = EmployeeSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(groups__name='employee')
+    #queryset = Employee.objects.filter(user__groups__name='employee')
     context = {
         "form": form,
         "header": header,
@@ -176,9 +180,45 @@ def employees(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
+def create_employee(request):
+    form1 = CreateUserForm(request.POST or None)
+    form2 = CreateEmployeeForm2(request.POST or None)
+    if form1.is_valid() and form2.is_valid():
+        #form.save()
+        #user = User.objects.get(username=request.POST.get('username'))
+        username = request.POST.get('username')
+        firstname = request.POST.get('first_name')
+        lastname = request.POST.get('last_name')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        createduser = User(username=username, first_name=firstname, last_name=lastname, email=email, password=password2)
+        user = form1.save()
+        group = Group.objects.get(name='employee')
+        user.groups.add(group)
+
+        userid = request.user.id
+        companyid = request.POST.get('company')
+        #company=request.POST.get('company')
+        empcreated = Employee(user=User(id=userid), company=Company(companyid))
+        empcreated.save()
+        messages.success(request, 'Employee created successfully!')
+        return redirect("/employees")
+    context = {
+        "form1": form1,
+        "form2": form2,
+        "title1": "Add Employee",
+        "title2": "Choose company of employee",
+    }
+    return render(request, "create_employee.html", context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'manager'])
 def update_employee(request, pk):
     title = "Update Employee"
     queryset = User.objects.get(id=pk)
+    #queryset = Employee.objects.get(id=pk)
     form = EmployeeUpdateForm(instance=queryset)
     if request.method == 'POST':
         form = EmployeeUpdateForm(request.POST, instance=queryset)
@@ -191,6 +231,68 @@ def update_employee(request, pk):
         'form': form
     }
     return render(request, 'update_employee.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'manager'])
+def company(request):
+    header = 'Company details'
+    form = CompanySearchForm(request.POST or None)
+    # group = request.user.groups.all().name == "customer"
+    queryset = Company.objects.all()
+    context = {
+        "form": form,
+        "header": header,
+        "queryset": queryset,
+    }
+    if request.method == 'POST':
+        queryset = Company.objects.filter(name=form['name'].value())
+        # form.fields['customer'].queryset = User.objects.filter()
+        context = {
+            "form": form,
+            "header": header,
+            "queryset": queryset,
+        }
+    return render(request, "list_companies.html", context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'manager'])
+def update_company(request, pk):
+    title = "Update Company"
+    queryset = Company.objects.get(id=pk)
+    form = CompanyUpdateForm(instance=queryset)
+    if request.method == 'POST':
+        form = CompanyUpdateForm(request.POST, instance=queryset)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Company updated successfully!')
+            return redirect('/companies')
+    context = {
+        'title': title,
+        'form': form
+    }
+    return render(request, 'update_company.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'manager'])
+def delete_company(request, pk):
+    queryset = Company.objects.get(id=pk)
+    #userid = request.user.id
+    usr = User.objects.all().select_related('employee')
+    emp = Employee.objects.values_list('user').filter(company__name__contains=queryset,
+                                   user__in=usr)
+    emp_query = User.objects.filter(pk__in=emp)
+    print(emp_query)
+    #user = User.objects.get(id=userid)
+    if request.method == 'POST':
+        emp_query.delete()
+        queryset.delete()
+
+        messages.success(request, 'Company and its employees deleted successfully!')
+        return redirect('/companies')
+    return render(request, 'delete_company.html')
 
 
 @login_required(login_url='login')

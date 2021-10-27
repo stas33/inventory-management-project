@@ -14,8 +14,8 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/navbar-fixed/">
 
     <!-- Bootstrap core CSS -->
-    <link href="{% static '/css/stylesheet.css' %}" rel="stylesheet">
-    <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/stylesheet.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="/docs/4.4/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
@@ -47,70 +47,16 @@
     <!-- Custom styles for this template -->
     <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
 </head>
-
-<body id="bg" class="bg" style="background-color: lightslategrey">
+<body id="bg" style="background-color: lightslategrey;">
 {% include 'navbar.html' %}
 
 <main role="main" class="flex-column" style="margin-right: 40px; margin-left: 40px; margin-top: 10px">
-    {% if messages %}
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-3">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}" role="alert">
-                        <p>{{ message }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-
-        </div>
-    {% endif %}
     <div class="jumbotron" style="background-color: lightgrey">
-        <div class="header">{{ header }}</div>
-
-        <form method='POST' action=''>{% csrf_token %}
+        <h1 style="margin-top: -30px; margin-bottom: 30px">{{ title }}</h1>
+        <form method="POST" action=" ">{% csrf_token %}
             {{ form|crispy }}
-            <input type="submit" value='Search'/>
+            <input type="submit" value="Save">
         </form>
-        <br>
-        <div class="mb-5">
-            <a href="/create_product" class="btn btn-primary float-right" style="margin-top: -15px">Add a new product</a>
-        </div>
-        <div class="display_table">
-            <table class='table'>
-                <thead>
-                <tr>
-                    <th>COUNT</th>
-                    <th>CATEGORY</th>
-                    <th>PRODUCT NAME</th>
-                    <th>QUANTITY</th>
-                    <th>AVAILABILITY</th>
-                    {% if request.user.groups.all.0.name != "customer" %}
-                        <th>LAST UPDATED</th>
-                        <th></th>
-                        <th></th>
-                    {% endif %}
-                </tr>
-                </thead>
-                {% for instance in queryset %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ instance.category }}</td>
-                        <td>{{ instance.prod_name }}</td>
-                        <td>{{ instance.quantity }}</td>
-                        <td>{{ instance.availability }}</td>
-                        {% if request.user.groups.all.0.name != "customer" %}
-                            <td>{{ instance.last_updated }}</td>
-                            <td><a href="{% url 'update_product' instance.id %}"><img
-                                    src="{% static 'img/pencil-fill.svg' %}"></a></td>
-                            <td><a href="{% url 'delete_product' instance.id %}"><img
-                                    src="{% static 'img/trash.svg' %}"></a></td>
-                        {% endif %}
-
-                    </tr>
-                {% endfor %}
-            </table>
-
-        </div>
     </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -126,4 +72,3 @@
 {% include "footer.html" %}
 </body>
 </html>
-
