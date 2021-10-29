@@ -2,13 +2,20 @@ from django import forms
 from .models import Product, Order, STATUS, Company, Employee
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from django.db.models import Q
 
 
 class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+
+class ActivateUserForm(forms.ModelForm):
+    group = forms.ModelChoiceField(queryset=Group.objects.filter(Q(name__contains='employee') | Q(name__contains='manager')), required=True)
+    class Meta:
+        model = User
+        fields = ['group']
 
 class CreateProductForm(forms.ModelForm):
     class Meta:

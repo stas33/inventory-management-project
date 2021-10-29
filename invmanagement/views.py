@@ -22,6 +22,28 @@ def registerPage(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
+            reg_user = get_user_model().objects.get(username=username)
+            reg_user.is_active = False
+            reg_user.save()
+            #group = Group.objects.get(name='customer')
+            #user.groups.add(group)
+
+            messages.success(request, 'Account was created for ' + username)
+
+            return redirect('login')
+
+    context = {'form': form}
+    return render(request, 'register.html', context)
+
+
+@unauthenticated_user
+def registerCustomerPage(request):
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
 
             group = Group.objects.get(name='customer')
             user.groups.add(group)
@@ -31,8 +53,7 @@ def registerPage(request):
             return redirect('login')
 
     context = {'form': form}
-    return render(request, 'register.html', context)
-
+    return render(request, 'register-customer.html', context)
 
 @unauthenticated_user
 def loginPage(request):
@@ -46,7 +67,7 @@ def loginPage(request):
             group = None
             if user.groups.exists():
                 group = request.user.groups.all()[0].name
-                #if group == 'customer':
+                #if user.is_super:
                 #    return redirect('homePage_customers')
             return redirect('home')
         else:
@@ -60,6 +81,44 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def inactive_users(request):
+    header = 'Registered users (inactive)'
+    #form = CustomerSearchForm(request.POST or None)
+    # group = request.user.groups.all().name == "customer"
+    queryset = User.objects.filter(is_active=False)
+    context = {
+        #"form": form,
+        "header": header,
+        "queryset": queryset,
+    }
+
+    return render(request, "inactive_users.html", context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def activate_user(request, pk):
+    title = "Activate User"
+    queryset = User.objects.get(id=pk)
+    form = ActivateUserForm(instance=queryset)
+    if request.method == 'POST':
+        form = ActivateUserForm(request.POST, instance=queryset)
+        if form.is_valid():
+            queryset.is_active=True
+            group = form['group'].value()
+            queryset.groups.add(group)
+            queryset.save()
+            form.save()
+            messages.success(request, 'User activated successfully!')
+            return redirect('/inactive_users')
+    context = {
+        'title': title,
+        'form': form
+    }
+    return render(request, 'activate_user.html', context)
+
 
 @login_required(login_url='login')
 def home(request):
@@ -68,19 +127,22 @@ def home(request):
     product_count = product.count()
     order = Order.objects.all()
     order_count = order.count()
-    customer = User.objects.filter(groups=1)
+    customer = User.objects.filter(groups=4)
     customer_count = customer.count()
-    employee = User.objects.filter(groups=2)
+    employee = User.objects.filter(groups=3)
     employee_count = employee.count()
     company = Company.objects.all()
     company_count = company.count()
+    inactive_usr = User.objects.filter(is_active=False)
+    inactive_count = inactive_usr.count()
     context = {
         "title": title,
         "product_count": product_count,
         "order_count": order_count,
         "customer_count": customer_count,
         "employee_count": employee_count,
-        "company_count": company_count
+        "company_count": company_count,
+        "inactive_count": inactive_count
     }
     return render(request, "home.html", context)
 
@@ -277,7 +339,7 @@ def update_company(request, pk):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
-def delete_company(request, pk):
+def deactivate(request, pk):
     queryset = Company.objects.get(id=pk)
     #userid = request.user.id
     usr = User.objects.all().select_related('employee')
@@ -287,10 +349,17 @@ def delete_company(request, pk):
     print(emp_query)
     #user = User.objects.get(id=userid)
     if request.method == 'POST':
-        emp_query.delete()
-        queryset.delete()
+        #emp_query.is_active=False
+        for obj in emp_query:
+            obj.is_active=False
+            obj.save()
+        if queryset.is_active:
+            queryset.is_active=False
+            queryset.save()
+        #emp_query.delete()
+        #queryset.delete()
 
-        messages.success(request, 'Company and its employees deleted successfully!')
+        messages.success(request, 'Company and its employees deactivated successfully!')
         return redirect('/companies')
     return render(request, 'delete_company.html')
 

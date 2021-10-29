@@ -20,11 +20,14 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('register/', views.registerPage, name="register"),
+    path('register-customer/', views.registerCustomerPage, name="register-customer"),
 	path('login/', views.loginPage, name="login"),
 	path('logout/', views.logoutUser, name="logout"),
 
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('inactive_users/', views.inactive_users, name='inactive_users'),
+    path('activate_user/<str:pk>/', views.activate_user, name='activate_user'),
     path('employee/', views.orders, name='orders'),
     path('employee/customers', views.customers, name='customers'),
 
@@ -37,7 +40,7 @@ urlpatterns = [
     path('update_employee/<str:pk>/', views.update_employee, name="update_employee"),
     path('companies/', views.company, name="company"),
     path('update_company/<str:pk>/', views.update_company, name="update_company"),
-    path('delete_company/<str:pk>/', views.delete_company, name="delete_company"),
+    path('deactivate/<str:pk>/', views.deactivate, name="deactivate"),
 
     path('home_customer/', views.homePage_customers, name="homePage_customers"),
     path('cart/', views.cart, name="cart"),

@@ -219,6 +219,22 @@
                                 </a>
                             {% endif %}
                         </div>
+                        <div class="col-md-4">
+                            {% if request.user.groups.all.0.name == "admin" %}
+                                <a class="text-decoration-none text-dark" href="/inactive_users">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Registered users (inactive) <i class="fas fa-shipping-fast"></i></h4>
+                                        <h3>{{ inactive_count }}</h3>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <div class="card my-card shadow text-center p-3">
+                                    <h4>Registered users (inactive) <i class="fas fa-shipping-fast"></i></h4>
+                                    <h3>{{ inactive_count }}</h3>
+                                </div>
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>

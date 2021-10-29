@@ -21,6 +21,11 @@
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
             {% endif %}
+            {% if request.user.groups.all.0.name == "admin" %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/inactive_users">Registered Users (inactive)</a>
+                </li>
+            {% endif %}
             {% if request.user.groups.all.0.name == "manager" %}
                 <li class="nav-item active">
                     <a class="nav-link" href="/products">Products list (manager)</a>
