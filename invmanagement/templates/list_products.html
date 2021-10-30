@@ -84,6 +84,7 @@
                     <th>PRODUCT NAME</th>
                     <th>QUANTITY</th>
                     <th>AVAILABILITY</th>
+                    <th>PRICE</th>
                     {% if request.user.groups.all.0.name != "customer" %}
                         <th>LAST UPDATED</th>
                         <th></th>
@@ -98,6 +99,7 @@
                         <td>{{ instance.prod_name }}</td>
                         <td>{{ instance.quantity }}</td>
                         <td>{{ instance.availability }}</td>
+                        <td>{{ instance.price }}</td>
                         {% if request.user.groups.all.0.name != "customer" %}
                             <td>{{ instance.last_updated }}</td>
                             <td><a href="{% url 'update_product' instance.id %}"><img

@@ -28,7 +28,7 @@ def registerPage(request):
             #group = Group.objects.get(name='customer')
             #user.groups.add(group)
 
-            messages.success(request, 'Account was created for ' + username)
+            messages.success(request, 'Register request for user: ' + username + ' has been sent')
 
             return redirect('login')
 
@@ -48,7 +48,7 @@ def registerCustomerPage(request):
             group = Group.objects.get(name='customer')
             user.groups.add(group)
 
-            messages.success(request, 'Account was created for ' + username)
+            messages.success(request, 'Account was created for customer: ' + username)
 
             return redirect('login')
 
@@ -84,7 +84,7 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def inactive_users(request):
-    header = 'Registered users (inactive)'
+    header = 'Register requests'
     #form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(is_active=False)
@@ -102,7 +102,9 @@ def inactive_users(request):
 def activate_user(request, pk):
     title = "Activate User"
     queryset = User.objects.get(id=pk)
+    queryset1 = Company.objects.all()
     form = ActivateUserForm(instance=queryset)
+    form1 = ChooseCompanyForm(request.POST or None)
     if request.method == 'POST':
         form = ActivateUserForm(request.POST, instance=queryset)
         if form.is_valid():
@@ -111,11 +113,17 @@ def activate_user(request, pk):
             queryset.groups.add(group)
             queryset.save()
             form.save()
+            if group == '3':
+                #form1 = ChooseCompanyForm(request.POST, instance=queryset1)
+                compid = form1['name'].value()
+                employee = Employee(user=User(id=pk), company=Company(id=compid))
+                employee.save()
             messages.success(request, 'User activated successfully!')
             return redirect('/inactive_users')
     context = {
         'title': title,
-        'form': form
+        'form': form,
+        'form1': form1
     }
     return render(request, 'activate_user.html', context)
 
@@ -504,8 +512,8 @@ def submit(request):
             order.save()
 
         request.session['cart'] = {}
-
-        return redirect("cart")
+        messages.success(request, 'Order submitted successfully!')
+        return redirect("homePage_customers")
     else:
         return render(request, 'submit_order.html')
 

@@ -49,9 +49,22 @@
     <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
 </head>
 
-<body id="bg" style="background-repeat: no-repeat; background-size: cover;  background-image: url('{% static "img/tech.jpeg"%}')">
+<body id="bg"
+      style="background-repeat: no-repeat; background-size: cover;  background-image: url('{% static "img/tech.jpeg" %}')">
 {% include 'navbar.html' %}
 
+{% if messages %}
+    <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endif %}
 
 <div class="container mt-4">
     <p class="display-4" style="color:white; text-align: left;">Available products</p>

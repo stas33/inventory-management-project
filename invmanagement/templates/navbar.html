@@ -23,7 +23,7 @@
             {% endif %}
             {% if request.user.groups.all.0.name == "admin" %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/inactive_users">Registered Users (inactive)</a>
+                    <a class="nav-link" href="/inactive_users">Pending register requests</a>
                 </li>
             {% endif %}
             {% if request.user.groups.all.0.name == "manager" %}

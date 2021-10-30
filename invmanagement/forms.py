@@ -17,10 +17,16 @@ class ActivateUserForm(forms.ModelForm):
         model = User
         fields = ['group']
 
+class ChooseCompanyForm(forms.ModelForm):
+    name = forms.ModelChoiceField(queryset=Company.objects.all())
+    class Meta:
+        model = Company
+        fields = ['name']
+
 class CreateProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'prod_name', 'quantity']
+        fields = ['category', 'prod_name', 'quantity', 'price']
 
     #def clean_category(self):
      #   category = self.cleaned_data.get('category')

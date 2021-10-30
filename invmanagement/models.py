@@ -24,8 +24,8 @@ STATUS = (
     )
 
 class Product(models.Model):
-    category = models.CharField(max_length=50, blank=True, choices=category_choice)
-    prod_name = models.CharField(max_length=50, blank=True, null=True)
+    category = models.CharField(max_length=50, blank=False, choices=category_choice)
+    prod_name = models.CharField(max_length=50, blank=False, null=True)
     quantity = models.IntegerField(default='0', blank=False, null=True)
     availability = models.BooleanField(default=False)
     last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
@@ -94,7 +94,7 @@ class Order(models.Model):
                                     user__groups__name='customer')
 
 class Company(models.Model):
-    name = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=50, blank=False, null=True)
     date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     address = models.CharField(max_length=100, null=True)
     postcode = models.IntegerField(default='0', blank=True, null=True)
