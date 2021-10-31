@@ -15,38 +15,71 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from invmanagement import views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
+from invmanagement.views import (
+    registerPage,
+    registerCustomerPage,
+    loginPage,
+    logoutUser,
+    inactive_users,
+    activate_user,
+    home,
+    employees,
+    create_employee,
+    update_employee,
+    customers,
+    homePage_customers
+)
+from companies.views import (
+    company,
+    update_company,
+    deactivate
+)
+from orders.views import (
+    orders,
+    create_order,
+    update_order,
+    cart,
+    submit,
+    orderpage
+)
+from products.views import (
+    products,
+    create_product,
+    update_product,
+    delete_product
+)
+
 urlpatterns = [
-    path('register/', views.registerPage, name="register"),
-    path('register-customer/', views.registerCustomerPage, name="register-customer"),
-	path('login/', views.loginPage, name="login"),
-	path('logout/', views.logoutUser, name="logout"),
+    path('register/', registerPage, name="register"),
+    path('register-customer/', registerCustomerPage, name="register-customer"),
+    path('login/', loginPage, name="login"),
+    path('logout/', logoutUser, name="logout"),
 
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('inactive_users/', views.inactive_users, name='inactive_users'),
-    path('activate_user/<str:pk>/', views.activate_user, name='activate_user'),
-    path('employee/', views.orders, name='orders'),
-    path('employee/customers', views.customers, name='customers'),
+    path('', home, name='home'),
+    path('inactive_users/', inactive_users, name='inactive_users'),
+    path('activate_user/<str:pk>/', activate_user, name='activate_user'),
+    path('employee/', orders, name='orders'),
+    path('employee/customers', customers, name='customers'),
 
-    path('products/', views.products, name='products'),
-    path('create_product/', views.create_product, name='create_product'),
-    path('update_product/<str:pk>/', views.update_product, name="update_product"),
-    path('delete_product/<str:pk>/', views.delete_product, name="delete_product"),
-    path('employees/', views.employees, name="employees"),
-    path('create_employee/', views.create_employee, name='create_employee'),
-    path('update_employee/<str:pk>/', views.update_employee, name="update_employee"),
-    path('companies/', views.company, name="company"),
-    path('update_company/<str:pk>/', views.update_company, name="update_company"),
-    path('deactivate/<str:pk>/', views.deactivate, name="deactivate"),
+    path('products/', products, name='products'),
+    path('create_product/', create_product, name='create_product'),
+    path('update_product/<str:pk>/', update_product, name="update_product"),
+    path('delete_product/<str:pk>/', delete_product, name="delete_product"),
+    path('employees/', employees, name="employees"),
+    path('create_employee/', create_employee, name='create_employee'),
+    path('update_employee/<str:pk>/', update_employee, name="update_employee"),
+    path('companies/', company, name="company"),
+    path('update_company/<str:pk>/', update_company, name="update_company"),
+    path('deactivate/<str:pk>/', deactivate, name="deactivate"),
 
-    path('home_customer/', views.homePage_customers, name="homePage_customers"),
-    path('cart/', views.cart, name="cart"),
-    path('submit/', views.submit, name="submit"),
-    path('myorders/', views.orderpage, name='orderpage'),
-    path('update_order/<str:pk>/', views.update_order, name="update_order"),
+    path('home_customer/', homePage_customers, name="homePage_customers"),
+    path('cart/', cart, name="cart"),
+    path('submit/', submit, name="submit"),
+    path('myorders/', orderpage, name='orderpage'),
+    path('update_order/<str:pk>/', update_order, name="update_order"),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

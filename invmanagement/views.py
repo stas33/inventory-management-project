@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
+from companies.models import Company
+from products.models import Product
+from orders.models import Order
+
+from companies.forms import *
 from django.contrib import messages
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
@@ -33,7 +38,7 @@ def registerPage(request):
             return redirect('login')
 
     context = {'form': form}
-    return render(request, 'register.html', context)
+    return render(request, 'auth/register.html', context)
 
 
 @unauthenticated_user
@@ -53,7 +58,7 @@ def registerCustomerPage(request):
             return redirect('login')
 
     context = {'form': form}
-    return render(request, 'register-customer.html', context)
+    return render(request, 'auth/register-customer.html', context)
 
 @unauthenticated_user
 def loginPage(request):
@@ -74,7 +79,7 @@ def loginPage(request):
             messages.info(request, 'Username OR password is incorrect')
 
     context = {}
-    return render(request, 'login.html', context)
+    return render(request, 'auth/login.html', context)
 
 
 def logoutUser(request):
@@ -94,7 +99,7 @@ def inactive_users(request):
         "queryset": queryset,
     }
 
-    return render(request, "inactive_users.html", context)
+    return render(request, "users/inactive_users.html", context)
 
 
 @login_required(login_url='login')
@@ -125,7 +130,7 @@ def activate_user(request, pk):
         'form': form,
         'form1': form1
     }
-    return render(request, 'activate_user.html', context)
+    return render(request, 'users/activate_user.html', context)
 
 
 @login_required(login_url='login')
@@ -155,73 +160,73 @@ def home(request):
     return render(request, "home.html", context)
 
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager', 'customer'])
-def products(request):
-    header = 'Available products'
-    form = ProductSearchForm(request.POST or None)
-
-    queryset = Product.objects.all()
-    context = {
-        "form": form,
-        "header": header,
-        "queryset": queryset,
-    }
-    if request.method == 'POST':
-        queryset = Product.objects.filter(category__icontains=form['category'].value(),
-                                          prod_name__icontains=form['prod_name'].value()
-                                          )
-        context = {
-            "form": form,
-            "header": header,
-            "queryset": queryset,
-        }
-    return render(request, "list_products.html", context)
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager'])
-def create_product(request):
-    form = CreateProductForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Product created successfully!')
-        return redirect("/products")
-    context = {
-        "form": form,
-        "title": "Add Product",
-    }
-    return render(request, "create_product.html", context)
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager'])
-def update_product(request, pk):
-    title = "Update product"
-    queryset = Product.objects.get(id=pk)
-    form = ProductUpdateForm(instance=queryset)
-    if request.method == 'POST':
-        form = ProductUpdateForm(request.POST, instance=queryset)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Product updated successfully!')
-            return redirect('/products')
-    context = {
-        'title': title,
-        'form': form
-    }
-    return render(request, 'create_product.html', context)
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager'])
-def delete_product(request, pk):
-    queryset = Product.objects.get(id=pk)
-    if request.method == 'POST':
-        queryset.delete()
-        messages.success(request, 'Product deleted successfully!')
-        return redirect('/products')
-    return render(request, 'delete_product.html')
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'manager', 'customer'])
+# def products(request):
+#     header = 'Available products'
+#     form = ProductSearchForm(request.POST or None)
+#
+#     queryset = Product.objects.all()
+#     context = {
+#         "form": form,
+#         "header": header,
+#         "queryset": queryset,
+#     }
+#     if request.method == 'POST':
+#         queryset = Product.objects.filter(category__icontains=form['category'].value(),
+#                                           prod_name__icontains=form['prod_name'].value()
+#                                           )
+#         context = {
+#             "form": form,
+#             "header": header,
+#             "queryset": queryset,
+#         }
+#     return render(request, "list_products.html", context)
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'manager'])
+# def create_product(request):
+#     form = CreateProductForm(request.POST or None)
+#     if form.is_valid():
+#         form.save()
+#         messages.success(request, 'Product created successfully!')
+#         return redirect("/products")
+#     context = {
+#         "form": form,
+#         "title": "Add Product",
+#     }
+#     return render(request, "create_product.html", context)
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'manager'])
+# def update_product(request, pk):
+#     title = "Update product"
+#     queryset = Product.objects.get(id=pk)
+#     form = ProductUpdateForm(instance=queryset)
+#     if request.method == 'POST':
+#         form = ProductUpdateForm(request.POST, instance=queryset)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Product updated successfully!')
+#             return redirect('/products')
+#     context = {
+#         'title': title,
+#         'form': form
+#     }
+#     return render(request, 'create_product.html', context)
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'manager'])
+# def delete_product(request, pk):
+#     queryset = Product.objects.get(id=pk)
+#     if request.method == 'POST':
+#         queryset.delete()
+#         messages.success(request, 'Product deleted successfully!')
+#         return redirect('/products')
+#     return render(request, 'delete_product.html')
 
 
 @login_required(login_url='login')
@@ -245,7 +250,7 @@ def employees(request):
             "header": header,
             "queryset": queryset,
         }
-    return render(request, "list_employees.html", context)
+    return render(request, "users/list_employees.html", context)
 
 
 @login_required(login_url='login')
@@ -280,7 +285,7 @@ def create_employee(request):
         "title1": "Add Employee",
         "title2": "Choose company of employee",
     }
-    return render(request, "create_employee.html", context)
+    return render(request, "users/create_employee.html", context)
 
 
 @login_required(login_url='login')
@@ -300,136 +305,136 @@ def update_employee(request, pk):
         'title': title,
         'form': form
     }
-    return render(request, 'update_employee.html', context)
+    return render(request, 'users/update_employee.html', context)
 
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager'])
-def company(request):
-    header = 'Company details'
-    form = CompanySearchForm(request.POST or None)
-    # group = request.user.groups.all().name == "customer"
-    queryset = Company.objects.all()
-    context = {
-        "form": form,
-        "header": header,
-        "queryset": queryset,
-    }
-    if request.method == 'POST':
-        queryset = Company.objects.filter(name=form['name'].value())
-        # form.fields['customer'].queryset = User.objects.filter()
-        context = {
-            "form": form,
-            "header": header,
-            "queryset": queryset,
-        }
-    return render(request, "list_companies.html", context)
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager'])
-def update_company(request, pk):
-    title = "Update Company"
-    queryset = Company.objects.get(id=pk)
-    form = CompanyUpdateForm(instance=queryset)
-    if request.method == 'POST':
-        form = CompanyUpdateForm(request.POST, instance=queryset)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Company updated successfully!')
-            return redirect('/companies')
-    context = {
-        'title': title,
-        'form': form
-    }
-    return render(request, 'update_company.html', context)
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager'])
-def deactivate(request, pk):
-    queryset = Company.objects.get(id=pk)
-    #userid = request.user.id
-    usr = User.objects.all().select_related('employee')
-    emp = Employee.objects.values_list('user').filter(company__name__contains=queryset,
-                                   user__in=usr)
-    emp_query = User.objects.filter(pk__in=emp)
-    print(emp_query)
-    #user = User.objects.get(id=userid)
-    if request.method == 'POST':
-        #emp_query.is_active=False
-        for obj in emp_query:
-            obj.is_active=False
-            obj.save()
-        if queryset.is_active:
-            queryset.is_active=False
-            queryset.save()
-        #emp_query.delete()
-        #queryset.delete()
-
-        messages.success(request, 'Company and its employees deactivated successfully!')
-        return redirect('/companies')
-    return render(request, 'delete_company.html')
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'employee'])
-def orders(request):
-    header = 'Submitted orders'
-    form = OrderSearchForm(request.POST or None)
-    queryset = Order.objects.filter(user__groups__name='customer',
-                                    )
-    context = {
-        "form": form,
-        "header": header,
-        "queryset": queryset,
-    }
-    if request.method == 'POST':
-        # queryset = Order.objects.filter(user__in=form['user'].value(),
-        #                               user__groups__name='customer')
-        queryset = Order.objects.filter(status__contains=form['status'].value(),
-                                        user__groups__name='customer')
-        # form.fields['customer'].queryset = User.objects.filter()
-        context = {
-            "form": form,
-            "header": header,
-            "queryset": queryset,
-        }
-    return render(request, "list_orders.html", context)
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'employee', 'customer'])
-def create_order(request):
-    form = CreateOrderForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Order created successfully!')
-        return redirect("/employee")
-    context = {
-        "form": form,
-        "title": "Add order",
-    }
-    return render(request, "create_order.html", context)
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'employee'])
-def update_order(request, pk):
-    title = "Update order status"
-    queryset = Order.objects.get(id=pk)
-    form = OrderUpdateForm(instance=queryset)
-    if request.method == 'POST':
-        form = OrderUpdateForm(request.POST, instance=queryset)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Order status updated successfully!')
-            return redirect('/employee')
-    context = {
-        'title': title,
-        'form': form
-    }
-    return render(request, 'create_order.html', context)
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'manager'])
+# def company(request):
+#     header = 'Company details'
+#     form = CompanySearchForm(request.POST or None)
+#     # group = request.user.groups.all().name == "customer"
+#     queryset = Company.objects.all()
+#     context = {
+#         "form": form,
+#         "header": header,
+#         "queryset": queryset,
+#     }
+#     if request.method == 'POST':
+#         queryset = Company.objects.filter(name=form['name'].value())
+#         # form.fields['customer'].queryset = User.objects.filter()
+#         context = {
+#             "form": form,
+#             "header": header,
+#             "queryset": queryset,
+#         }
+#     return render(request, "list_companies.html", context)
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'manager'])
+# def update_company(request, pk):
+#     title = "Update Company"
+#     queryset = Company.objects.get(id=pk)
+#     form = CompanyUpdateForm(instance=queryset)
+#     if request.method == 'POST':
+#         form = CompanyUpdateForm(request.POST, instance=queryset)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Company updated successfully!')
+#             return redirect('/companies')
+#     context = {
+#         'title': title,
+#         'form': form
+#     }
+#     return render(request, 'update_company.html', context)
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'manager'])
+# def deactivate(request, pk):
+#     queryset = Company.objects.get(id=pk)
+#     #userid = request.user.id
+#     usr = User.objects.all().select_related('employee')
+#     emp = Employee.objects.values_list('user').filter(company__name__contains=queryset,
+#                                    user__in=usr)
+#     emp_query = User.objects.filter(pk__in=emp)
+#     print(emp_query)
+#     #user = User.objects.get(id=userid)
+#     if request.method == 'POST':
+#         #emp_query.is_active=False
+#         for obj in emp_query:
+#             obj.is_active=False
+#             obj.save()
+#         if queryset.is_active:
+#             queryset.is_active=False
+#             queryset.save()
+#         #emp_query.delete()
+#         #queryset.delete()
+#
+#         messages.success(request, 'Company and its employees deactivated successfully!')
+#         return redirect('/companies')
+#     return render(request, 'delete_company.html')
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'employee'])
+# def orders(request):
+#     header = 'Submitted orders'
+#     form = OrderSearchForm(request.POST or None)
+#     queryset = Order.objects.filter(user__groups__name='customer',
+#                                     )
+#     context = {
+#         "form": form,
+#         "header": header,
+#         "queryset": queryset,
+#     }
+#     if request.method == 'POST':
+#         # queryset = Order.objects.filter(user__in=form['user'].value(),
+#         #                               user__groups__name='customer')
+#         queryset = Order.objects.filter(status__contains=form['status'].value(),
+#                                         user__groups__name='customer')
+#         # form.fields['customer'].queryset = User.objects.filter()
+#         context = {
+#             "form": form,
+#             "header": header,
+#             "queryset": queryset,
+#         }
+#     return render(request, "list_orders.html", context)
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'employee', 'customer'])
+# def create_order(request):
+#     form = CreateOrderForm(request.POST or None)
+#     if form.is_valid():
+#         form.save()
+#         messages.success(request, 'Order created successfully!')
+#         return redirect("/employee")
+#     context = {
+#         "form": form,
+#         "title": "Add order",
+#     }
+#     return render(request, "create_order.html", context)
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'employee'])
+# def update_order(request, pk):
+#     title = "Update order status"
+#     queryset = Order.objects.get(id=pk)
+#     form = OrderUpdateForm(instance=queryset)
+#     if request.method == 'POST':
+#         form = OrderUpdateForm(request.POST, instance=queryset)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, 'Order status updated successfully!')
+#             return redirect('/employee')
+#     context = {
+#         'title': title,
+#         'form': form
+#     }
+#     return render(request, 'create_order.html', context)
 
 
 @login_required(login_url='login')
@@ -452,7 +457,7 @@ def customers(request):
             "header": header,
             "queryset": queryset,
         }
-    return render(request, "list_customers.html", context)
+    return render(request, "users/list_customers.html", context)
 
 
 @login_required(login_url='login')
@@ -488,40 +493,40 @@ def homePage_customers(request):
         return render(request, 'home_customer.html', context)
 
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'customer'])
-def cart(request):
-    cart_product_id = list(request.session.get('cart').keys())
-    cart_product = Product.get_products_by_id(cart_product_id)
-    return render(request, 'cart.html', {'cart_product': cart_product})
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'customer'])
-def submit(request):
-    if request.method == "POST":
-        address = request.POST.get("address")
-        phone = request.POST.get("phone")
-        user = request.user.id
-        # customer = request.session.get("customer")
-        cart = request.session.get("cart")
-        products = Product.get_products_by_id(list(cart.keys()))
-        for product in products:
-            order = Order(user=User(id=user), product=product, price=product.price, address=address,
-                          phone=phone, quantity=cart.get(str(product.id)), status="Pending")
-            order.save()
-
-        request.session['cart'] = {}
-        messages.success(request, 'Order submitted successfully!')
-        return redirect("homePage_customers")
-    else:
-        return render(request, 'submit_order.html')
-
-
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'customer'])
-def orderpage(request):
-    user = request.user.id
-    order = Order.get_order_by_customer(user)
-    print(order)
-    return render(request, 'customer_orders.html', {'order': order})
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'customer'])
+# def cart(request):
+#     cart_product_id = list(request.session.get('cart').keys())
+#     cart_product = Product.get_products_by_id(cart_product_id)
+#     return render(request, 'cart.html', {'cart_product': cart_product})
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'customer'])
+# def submit(request):
+#     if request.method == "POST":
+#         address = request.POST.get("address")
+#         phone = request.POST.get("phone")
+#         user = request.user.id
+#         # customer = request.session.get("customer")
+#         cart = request.session.get("cart")
+#         products = Product.get_products_by_id(list(cart.keys()))
+#         for product in products:
+#             order = Order(user=User(id=user), product=product, price=product.price, address=address,
+#                           phone=phone, quantity=cart.get(str(product.id)), status="Pending")
+#             order.save()
+#
+#         request.session['cart'] = {}
+#         messages.success(request, 'Order submitted successfully!')
+#         return redirect("homePage_customers")
+#     else:
+#         return render(request, 'submit_order.html')
+#
+#
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'customer'])
+# def orderpage(request):
+#     user = request.user.id
+#     order = Order.get_order_by_customer(user)
+#     print(order)
+#     return render(request, 'customer_orders.html', {'order': order})
