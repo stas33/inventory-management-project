@@ -20,6 +20,7 @@ pipeline {
                     ./manage.py test companies'''
             }
         }
+
         stage('Deploy') {
             steps {
                 sshagent (credentials: ['ssh-deployment1']) {
