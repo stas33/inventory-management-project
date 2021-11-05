@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sshagent (credentials: ['ssh-deployment-1']) {
+                sshagent (credentials: ['ssh-deployment1']) {
 
                 sh '''
                     pwd
