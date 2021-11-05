@@ -29,8 +29,8 @@ pipeline {
                 sh '''
                     pwd
                     echo $WORKSPACE
-                    ansible-playbook -i ~/workspace/ansible-inventory-management-system/hosts.yml -l deploymentservers ~/workspace/ansible-inventory-management-system/playbooks/postgres.yml
-                    ansible-playbook -i ~/workspace/ansible-inventory-management-system/hosts.yml -l deploymentservers ~/workspace/ansible-inventory-management-system/playbooks/inventory-project-install.yml
+                    ansible-playbook -i ~/workspace/ansible-inventory-management-system/hosts.yml -l deploymentservers ~/workspace/ansible-project-inventory/playbooks/postgres.yml
+                    ansible-playbook -i ~/workspace/ansible-inventory-management-system/hosts.yml -l deploymentservers ~/workspace/ansible-project-inventory/playbooks/inventory-project-install.yml
                     '''
                 }
             }
