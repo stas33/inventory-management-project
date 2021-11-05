@@ -22,5 +22,18 @@ pipeline {
                     ./manage.py test companies'''
             }
         }
+        stage('Deploy') {
+            steps {
+                sshagent (credentials: ['ssh-deployment-1']) {
+
+                sh '''
+                    pwd
+                    echo $WORKSPACE
+                    ansible-playbook -i ~/workspace/ansible-inventory-management-system/hosts.yml -l deploymentservers ~/workspace/ansible-inventory-management-system/playbooks/postgres.yml
+                    ansible-playbook -i ~/workspace/ansible-inventory-management-system/hosts.yml -l deploymentservers ~/workspace/ansible-inventory-management-system/playbooks/inventory-project-install.yml
+                    '''
+                }
+            }
+        }
     }
 }
