@@ -23,12 +23,13 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sshagent (credentials: ['ssh-deployment1']) {
+                sshagent (credentials: ['ssh-deployment1', 'deployment-test1']) {
 
                 sh '''
                     pwd
                     echo $WORKSPACE
                     ansible-playbook -i ~/workspace/ansible-project-inventory/hosts.yml -l deploymentservers ~/workspace/ansible-project-inventory/playbooks/postgres.yml
+                    ansible-playbook -i ~/workspace/ansible-project-inventory/hosts.yml -l deploymentservers ~/workspace/ansible-project-inventory/playbooks/inventory-project-install.yml
                     '''
                 }
             }
