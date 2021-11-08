@@ -92,7 +92,20 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
     # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
-    'default': env.db(),
+    #'default': env.db(),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'demodb',
+
+        'USER': 'demouser',
+
+        'PASSWORD': 'pass123',
+
+        'HOST': '13.80.177.112',
+
+        'PORT': '22',
+    },
     # read os.environ['SQLITE_URL']
     'extra': env.db('SQLITE_URL', default='sqlite:///.db.sqlite3')
 }
