@@ -104,7 +104,6 @@ DATABASES = {
     #
     #     'HOST': '13.80.177.112',
     #
-    #     'PORT': '22',
     # },
     # read os.environ['SQLITE_URL']
     'extra': env.db('SQLITE_URL', default='sqlite:///.db.sqlite3')
