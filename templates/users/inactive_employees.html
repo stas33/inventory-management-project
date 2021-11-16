@@ -90,7 +90,7 @@
                         <td>{{ instance.email }}</td>
                         <td> {{ instance.is_active }}</td>
                         <td>{{ instance.date_joined }}</td>
-                        <td><a href="{% url 'activate_user' instance.id %}">Activate</a></td>
+                        <td><a href="{% url 'activate_user' instance.id %}" class="btn btn-success">Activate</a></td>
                     </tr>
                 {% endfor %}
             </table>

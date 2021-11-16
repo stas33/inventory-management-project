@@ -1,0 +1,148 @@
+{% load static %}
+{% load crispy_forms_tags %}
+{% load cart %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.6">
+    <title>Home</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/navbar-fixed/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static '/css/stylesheet.css' %}" rel="stylesheet">
+    <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/4.4/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/4.4/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/4.4/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon.ico">
+    <meta name="msapplication-config" content="/docs/4.4/assets/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#563d7c">
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
+</head>
+
+<body id="bg" style="background-color: lightslategrey">
+{% include 'navbar.html' %}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box-element" style="margin-top: 40px; margin-left: 150px; margin-right: 150px; background-color: white">
+            <a class="btn btn-outline-dark" href="{% url 'choose_categories' %}">&#x2190; Continue Shopping</a>
+            <br>
+            <br>
+            <table class="table">
+                <tr>
+                    <th><h5>Items: <strong>{{ order.get_cart_items }}</strong></h5></th>
+                    <th><h5>Total: <strong>{{ order.get_cart_total|currency }}</strong></h5></th>
+                    <th>
+                        <a href="{% url 'checkout' %}" class="btn btn-success float-right">Proceed to order placement</a>
+                    </th>
+                </tr>
+            </table>
+        </div>
+
+        <br>
+        <div class="box-element" style="margin-left: 50px; margin-right: 50px">
+            <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
+                margin-bottom: 10px; border-bottom: 1px solid #ececec">
+                <div style="flex:1; margin-left: 50px"></div>
+                <div style="flex:2"><strong>Product</strong></div>
+                <div style="flex:2"><strong>Category</strong></div>
+                <div style="flex:1"><strong>Price</strong></div>
+                <div style="flex:1"><strong>Quantity</strong></div>
+                <div style="flex:1"><strong>Total</strong></div>
+            </div>
+
+            {% for item in items %}
+                <div class="cart-row" style="display: flex; align-items: flex-start; padding-bottom: 10px;
+                margin-bottom: 10px; border-bottom: 1px solid #ececec">
+                    <div style="flex:1; margin-left: 50px">
+                        <img style="width: 100px" src="{{ item.product.imageURL }}"></div>
+                    <div style="flex:2">{{ item.product.prod_name }}</div>
+                    <div style="flex:2">{{ item.product.category }}</div>
+                    <div style="flex:1">{{ item.product.price|currency }}</div>
+                    <div style="flex:1">
+                        <p style="display: inline-block; font-weight: 700; padding-right: 10px">{{ item.quantity }}</p>
+                        <div style="display: inline-block; font-weight: 700; padding-right: 10px">
+                            <img data-product="{{ item.product.id }}" data-action="add" class="update-cart"
+                                 style="width: 12px; cursor: pointer; display: block; margin-top: 5px; transition: .1s"
+                                 src="{% static 'img/up.png' %}">
+
+                            <img data-product="{{ item.product.id }}" data-action="remove" class="update-cart"
+                                 style="width: 12px; cursor: pointer; display: block; margin-top: 5px; transition: .1s"
+                                 src="{% static 'img/down.png' %}">
+                        </div>
+                    </div>
+                    <div style="flex:1">{{ item.get_total|currency }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+<script type="text/javascript">
+    var user = '{{request.user}}'
+
+    function getToken(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getToken('csrftoken')
+</script>
+
+{% include "footer.html" %}
+</body>
+</html>

@@ -1,0 +1,207 @@
+{% load static %}
+{% load crispy_forms_tags %}
+{% load cart %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.6">
+    <title>Home</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/navbar-fixed/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static '/css/stylesheet.css' %}" rel="stylesheet">
+    <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/4.4/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/4.4/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/4.4/assets/img/favicons/safari-pinned-tab.svg" color="#563d7c">
+    <link rel="icon" href="/docs/4.4/assets/img/favicons/favicon.ico">
+    <meta name="msapplication-config" content="/docs/4.4/assets/img/favicons/browserconfig.xml">
+    <meta name="theme-color" content="#563d7c">
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
+</head>
+
+<body id="bg" style="background-color: lightslategrey">
+{% include 'navbar.html' %}
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="box-element" id="form-wrapper" style="margin-top: 40px; margin-left: 150px; margin-right: 150px">
+            <form id="form">
+
+                <div id="shipping-info">
+                    <hr>
+                    <p><strong>Shipping Information:</strong></p>
+                    <hr>
+                    <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
+                        <input class="form-control" type="text" name="address" placeholder="Address..">
+                    </div>
+                    <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
+                        <input class="form-control" type="text" name="city" placeholder="City..">
+                    </div>
+                    <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
+                        <input class="form-control" type="text" name="phone" placeholder="Phone..">
+                    </div>
+
+                </div>
+
+                <hr>
+                <input id="form-button" class="btn btn-success btn-block" type="submit"
+                       value="Continue">
+            </form>
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+        <div class="box-element" style="margin-top: 40px; margin-left: 150px; margin-right: 150px">
+            <a class="btn btn-outline-dark" href="{% url 'mycart' %}">&#x2190; Back to Cart</a>
+            <hr>
+            <h3>Order Summary</h3>
+            <hr>
+            {% for item in items %}
+                <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
+                margin-bottom: 10px; border-bottom: 1px solid #ececec">
+                    <div style="flex:2"><img style="width: 100px" src="{{ item.product.imageURL }}"></div>
+                    <div style="flex:2"><p>{{ item.product.prod_name }}</p></div>
+                    <div style="flex:2"><p>{{ item.product.category }}</p></div>
+                    <div style="flex:1"><p>{{ item.product.price|currency }}</p></div>
+                    <div style="flex:1"><p>x{{ item.quantity }}</p></div>
+                </div>
+            {% endfor %}
+            <h5>Items: {{ order.get_cart_items }}</h5>
+            <h5>Total: {{ order.get_cart_total|currency }}</h5>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+
+<script type="text/javascript">
+
+    var user = '{{request.user}}'
+
+    function getToken(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var csrftoken = getToken('csrftoken')
+
+
+    console.log('Continue1 button clicked')
+    var shipping = '{{ order.shipping }}'
+    var total = '{{ order.get_cart_total|currency }}'
+    if (shipping == 'False') {
+        document.getElementById('shipping-info').innerHTML = ''
+    }
+    var form = document.getElementById('form')
+    form.addEventListener('submit', function (e) {
+        e.preventDefault()
+        console.log('Form Submitted...')
+    })
+    document.getElementById('form-button').addEventListener('click', function (e) {
+        e.preventDefault()
+        submitFormData()
+    })
+
+    function submitFormData() {
+        console.log('Continue button clicked')
+        {#var userFormData = {#}
+        {#    'name': null,#}
+        {#    'email': null,#}
+        {#    'total': total,#}
+        {# } #}
+        var shippingInfo = {
+            'address': null,
+            'city': null,
+            'phone': null,
+        }
+        if (shipping != 'False') {
+            shippingInfo.address = form.address.value
+            shippingInfo.city = form.city.value
+            shippingInfo.phone = form.phone.value
+        }
+
+        var url = "/customer/process_order/"
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({'shipping': shippingInfo}),
+
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+                alert('Transaction completed');
+
+                cart = {}
+                {#items = []#}
+                document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+
+                window.location.href = "{% url 'orderpage' %}"
+                {#window.location.reload()#}
+
+
+            })
+    }
+</script>
+
+{% include "footer.html" %}
+</body>
+</html>

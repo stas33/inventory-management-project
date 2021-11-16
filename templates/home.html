@@ -50,7 +50,7 @@
 </head>
 {% if request.user.groups.all.0.name == "customer" %}
     <body id="bg"
-          style="background-repeat: no-repeat; background-size: cover;  background-image: url('{% static "img/tech.jpeg" %}')">
+          style="background-color: lightslategrey">
 {% else %}
     <body id="bg" style="background-color: lightslategrey">
 {% endif %}
@@ -68,13 +68,14 @@
     {% if request.user.groups.all.0.name == "admin" %}
         <div class="row mx-auto">
             <h4 style="color: white">Quick navigation:</h4>
-            <a class="btn btn-lg bg-info" href="/products" role="button" style="margin-bottom: 20px; margin-left: 50px">Products
-                list (manager) &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/products/categories" role="button"
+               style="margin-bottom: 20px; margin-left: 50px">Navigate Products (manager) &raquo;</a>
             <a class="btn btn-lg bg-info" href="/employees" role="button"
                style="margin-bottom: 20px; margin-left: 20px">Employees
                 list
                 &raquo;</a>
-            <a class="btn btn-lg bg-info" href="/employee" role="button" style="margin-bottom: 20px; margin-left: 20px">Orders
+            <a class="btn btn-lg bg-info" href="/orders_list" role="button"
+               style="margin-bottom: 20px; margin-left: 20px">Orders
                 list
                 &raquo;</a>
             <a class="btn btn-lg bg-info" href="/employee/customers" role="button"
@@ -82,8 +83,8 @@
                 details &raquo;</a>
             <br>
             <br>
-            <a class="btn btn-lg bg-info" href="/home_customer" role="button"
-               style="margin-top: 15px; margin-left: 20px; margin-bottom: 30px ">Products list (customer) &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/customer/products/choose_category/" role="button"
+               style="margin-top: 15px; margin-left: 20px; margin-bottom: 30px ">Navigate Products (customer) &raquo;</a>
             <a class="btn btn-lg bg-info" href="/companies" role="button"
                style="margin-top: 15px; margin-left: 20px; margin-bottom: 30px ">Company details &raquo;</a>
         </div>
@@ -91,9 +92,8 @@
     {% if request.user.groups.all.0.name == "manager" %}
         <div class="row mx-auto">
             <h4 style="color: white">Quick navigation:</h4>
-            <a class="btn btn-lg bg-info" href="/products" role="button"
-               style="margin-bottom: 40px; margin-left: 50px;">Products
-                list (manager) &raquo;</a>
+            <a class="btn btn-lg bg-info" href="/products/categories" role="button"
+               style="margin-bottom: 40px; margin-left: 50px;">Navigate Products &raquo;</a>
             <a class="btn btn-lg bg-info" href="/employees" role="button"
                style="margin-bottom: 40px; margin-left: 20px">Employees
                 list
@@ -105,7 +105,8 @@
     {% if request.user.groups.all.0.name == "employee" %}
         <div class="row mx-auto">
             <h4 style="color: white">Quick navigation:</h4>
-            <a class="btn btn-lg bg-info" href="/employee" role="button" style="margin-bottom: 40px; margin-left: 50px">Orders
+            <a class="btn btn-lg bg-info" href="/orders_list" role="button"
+               style="margin-bottom: 40px; margin-left: 50px">Orders
                 list &raquo;</a>
             <a class="btn btn-lg bg-info" href="/employee/customers" role="button"
                style="margin-bottom: 40px; margin-left: 50px">Customers
@@ -114,16 +115,19 @@
     {% endif %}
     {% if request.user.groups.all.0.name == "customer" %}
         <div class="row mx-auto">
-        <h4 style="color: white">Quick navigation:</h4>
-            <a class="btn btn-lg bg-info" href="/home_customer" role="button"
-               style="margin-bottom: 40px; margin-left: 50px">Products list (customer) &raquo;</a>
+
+            <h4 style="color: white; margin-top: 100px">Quick navigation:</h4>
+            <a class="btn btn-lg bg-info" href="/customer/products/choose_category" role="button"
+               style="margin-bottom: 40px; margin-left: 50px; margin-top: 100px">Navigate Products &raquo;</a>
             <br>
             <br>
-            <a class="btn btn-lg bg-info" href="/cart" role="button" style="margin-bottom: 40px; margin-left: 50px">My
+            <a class="btn btn-lg bg-info" href="/mycart" role="button"
+               style="margin-bottom: 40px; margin-left: 50px; margin-top: 100px">My
                 Cart &raquo;</a>
             <br>
             <br>
-            <a class="btn btn-lg bg-info" href="/myorders" role="button" style="margin-bottom: 40px; margin-left: 50px">My
+            <a class="btn btn-lg bg-info" href="/myorders" role="button"
+               style="margin-bottom: 40px; margin-left: 50px; margin-top: 100px">My
                 Orders &raquo;</a>
         </div>
     {% endif %}
@@ -139,7 +143,7 @@
                     <div class="row mx-auto">
                         <div class="col-md-4">
                             {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "employee" %}
-                                <a class="text-decoration-none text-dark" href="/employee">
+                                <a class="text-decoration-none text-dark" href="/orders_list">
                                     <div class="card my-card shadow text-center p-3">
                                         <h4>Total orders <i class="fas fa-users"></i></h4>
                                         <h3>{{ order_count }}</h3>
@@ -155,7 +159,7 @@
                         </div>
                         <div class="col-md-4">
                             {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == "manager" %}
-                                <a class="text-decoration-none text-dark" href="/products">
+                                <a class="text-decoration-none text-dark" href="/products/categories">
                                     <div class="card my-card shadow text-center p-3">
                                         <h4>Total products<i class="fas fa-box"></i></h4>
                                         <h3>{{ product_count }}</h3>
@@ -215,22 +219,6 @@
                                 <div class="card my-card shadow text-center p-3">
                                     <h4>Companies <i class="fas fa-shipping-fast"></i></h4>
                                     <h3>{{ company_count }}</h3>
-                                </div>
-                                </a>
-                            {% endif %}
-                        </div>
-                        <div class="col-md-4">
-                            {% if request.user.groups.all.0.name == "admin" %}
-                                <a class="text-decoration-none text-dark" href="/inactive_users">
-                                    <div class="card my-card shadow text-center p-3">
-                                        <h4>Pending register requests <i class="fas fa-shipping-fast"></i></h4>
-                                        <h3>{{ inactive_count }}</h3>
-                                    </div>
-                                </a>
-                            {% else %}
-                                <div class="card my-card shadow text-center p-3">
-                                    <h4>Pending register requests <i class="fas fa-shipping-fast"></i></h4>
-                                    <h3>{{ inactive_count }}</h3>
                                 </div>
                                 </a>
                             {% endif %}

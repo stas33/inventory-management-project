@@ -77,19 +77,17 @@
             <table class='table'>
                 <thead>
                 <tr>
-                    <th>COUNTER</th>
                     <th>NAME</th>
                     <th>DATE_ADDED</th>
                     <th>ADDRESS</th>
                     <th>POSTCODE</th>
                     <th>IS ACTIVE</th>
-                    <th></th>
+                    <th>UPDATE INFO</th>
                     <th></th>
                 </tr>
                 </thead>
                 {% for instance in queryset %}
                     <tr>
-                        <td>{{ forloop.counter }}</td>
                         <td>{{ instance.name }}</td>
                         <td>{{ instance.date_added }}</td>
                         <td>{{ instance.address }}</td>
@@ -98,7 +96,7 @@
                         <td><a href="{% url 'update_company' instance.id %}"><img
                                 src="{% static 'img/pencil-fill.svg' %}"></a></td>
                         {% if instance.is_active %}
-                            <td><a href="{% url 'deactivate' instance.id %}">Deactivate</a></td>
+                            <td><a href="{% url 'deactivate' instance.id %}" class="btn btn-danger">Deactivate</a></td>
                         {% endif %}
                         {% if instance.is_active != True %}
                             <td></td>

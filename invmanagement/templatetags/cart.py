@@ -1,4 +1,5 @@
 from django import template
+from products.models import Product
 
 register = template.Library()
 
@@ -17,6 +18,15 @@ def cart_quantity(product, cart):
         if int(id) == product.id:
             return cart.get(id)
     return 0
+
+
+# @register.filter(name='current_quantity')
+# def current_quantity(item, cart):
+#     keys = cart.keys()
+#     for id in keys:
+#         if int(id) == item.id:
+#             return cart.get(id)
+#     return 0
 
 @register.filter(name='total_price')
 def total_price(product, cart):

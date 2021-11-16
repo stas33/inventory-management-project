@@ -54,7 +54,6 @@
     <div class="jumbotron" style="background-color: lightgrey">
         <h1 style="margin-top: -30px; margin-bottom: 30px">{{ title }}</h1>
         <form method="POST" action=" ">{% csrf_token %}
-            {{ form|crispy }}
             {{ form1|crispy }}
             <input type="submit" value="Save" style="margin-top: 20px">
 

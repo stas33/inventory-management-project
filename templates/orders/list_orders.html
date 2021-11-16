@@ -65,45 +65,84 @@
 
         </div>
     {% endif %}
-    <div class="jumbotron" style="background-color: lightgrey">
-        <div class="header">{{ header }}</div>
 
-        <form method='POST' action=''>{% csrf_token %}
-            {{ form|crispy }}
-            <input type="submit" value='Search'/>
-        </form>
-        <br>
+    <div class="row">
+        <p class="header"
+           style="color: honeydew; text-shadow: none; margin-left: -10px; margin-top: 50px">{{ header }}</p>
+        <div class="col-lg-12">
+            <div class="box-element" style="margin-left: 20px; margin-right: 20px; margin-top: 50px">
+                <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
+                margin-bottom: 10px; border-bottom: 1px solid #ececec">
 
-        <div class="display_table">
-            <table class='table'>
-                <thead>
-                <tr>
-                    <th>COUNT</th>
-                    <th>PRODUCT</th>
-                    <th>CUSTOMER</th>
-                    <th>QUANTITY</th>
-                    <th>STATUS</th>
-                    <th>TOTAL PRICE</th>
-                    <th>DATE SUBMITTED</th>
-                    <th>UPDATE ORDER STATUS</th>
-                </tr>
-                </thead>
-                {% for instance in queryset %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ instance.product }}</td>
-                        <td>{{ instance.user }}</td>
-                        <td>{{ instance.quantity }}</td>
-                        <td>{{ instance.status }}</td>
-                        <td>{{ instance.quantity|multiply:instance.price|currency }}</td>
-                        <td>{{ instance.date }}</td>
-                        <td><a href="{% url 'update_order' instance.id %}"><img
-        src="{% static 'img/pencil-fill.svg' %}"></a></td>
-                    </tr>
+                    <div style="flex:1"><strong>Customer Name</strong></div>
+                    <div style="flex:2"><strong>Customer Email</strong></div>
+                    <div style="flex:2"><strong>Customer Phone</strong></div>
+                    <div style="flex:2"><strong>Order Date</strong></div>
+                    <div style="flex:2"><strong>Trnasaction Id</strong></div>
+                    <div style="flex:1"><strong>Status</strong></div>
+                    <div style="flex:1"><strong>Update Status</strong></div>
+                    <div style="flex:2"><strong></strong></div>
+                </div>
+
+                {% for order in queryset %}
+                    <div class="cart-row" style="display: flex; align-items: flex-start; padding-bottom: 10px;
+                margin-bottom: 10px; border-bottom: 1px solid #ececec">
+
+                        <div style="flex:1">{{ order.customer.name }}</div>
+                        <div style="flex:2">{{ order.customer.email }}</div>
+                        <div style="flex:2">{{ order.customer.phone }}</div>
+                        <div style="flex:2">{{ order.date_ordered }}</div>
+                        <div style="flex:2">{{ order.transaction_id }}}</div>
+                        <div style="flex:1">{{ order.status }}</div>
+                        <div style="flex:1"><a href="{% url 'update_order' order.id %}"><img
+                                src="{% static 'img/pencil-fill.svg' %}"></a></div>
+                        <div style="flex:2"><a href="{% url 'order_items' order.id %}" class="btn btn-outline-info">Order
+                            items details</a></div>
+                    </div>
                 {% endfor %}
-            </table>
+            </div>
         </div>
     </div>
+
+    {#    <div class="jumbotron" style="background-color: lightgrey">#}
+    {#        <div class="header">{{ header }}</div>#}
+
+    {#        <form method='POST' action=''>{% csrf_token %}#}
+    {#            {{ form|crispy }}#}
+    {#            <input type="submit" value='Search'/>#}
+    {#        </form>#}
+    {#        <br>#}
+
+    {#        <div class="display_table">#}
+    {#            <table class='table'>#}
+    {#                <thead>#}
+    {#                <tr>#}
+    {#                    <th>COUNT</th>#}
+    {#                    <th>PRODUCT</th>#}
+    {#                    <th>CUSTOMER</th>#}
+    {#                    <th>QUANTITY</th>#}
+    {#                    <th>STATUS</th>#}
+    {#                    <th>TOTAL PRICE</th>#}
+    {#                    <th>DATE SUBMITTED</th>#}
+    {#                    <th>UPDATE ORDER STATUS</th>#}
+    {#                </tr>#}
+    {#                </thead>#}
+    {#                {% for instance in queryset %}#}
+    {#                    <tr>#}
+    {#                        <td>{{ forloop.counter }}</td>#}
+    {#                        <td>{{ instance.product }}</td>#}
+    {#                        <td>{{ instance.user }}</td>#}
+    {#                        <td>{{ instance.quantity }}</td>#}
+    {#                        <td>{{ instance.status }}</td>#}
+    {#                        <td>{{ instance.quantity|multiply:instance.price|currency }}</td>#}
+    {#                        <td>{{ instance.date }}</td>#}
+    {#                        <td><a href="{% url 'update_order' instance.id %}"><img#}
+    {#        src="{% static 'img/pencil-fill.svg' %}"></a></td>#}
+    {#                    </tr>#}
+    {#                {% endfor %}#}
+    {#            </table>#}
+    {#        </div>#}
+    {#    </div>#}
 </main>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

@@ -23,12 +23,15 @@
             {% endif %}
             {% if request.user.groups.all.0.name == "admin" %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/inactive_users">Pending register requests</a>
+                    <a class="nav-link" href="/inactive_employees">Pending employees</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/inactive_managers">Pending managers</a>
                 </li>
             {% endif %}
             {% if request.user.groups.all.0.name == "manager" %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/products">Products list (manager)</a>
+                    <a class="nav-link" href="/choose_category">Navigate Products (manager)</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/employees">Employees list</a>
@@ -44,13 +47,13 @@
             {% endif %}
             {% if request.user.groups.all.0.name == "customer" %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/home_customer">Products list (customer)</a>
+                    <a class="nav-link" href="/customer/products/choose_category/">Navigate Products</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/cart">My Cart</a>
+                    <a class="nav-link" href="/customer/mycart/">My Cart</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/myorders">My Orders</a>
+                    <a class="nav-link" href="/customer/myorders">My Orders</a>
                 </li>
             {% endif %}
         </ul>

@@ -13,7 +13,7 @@ class CreateUserForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
 class ActivateUserForm(forms.ModelForm):
-    group = forms.ModelChoiceField(queryset=Group.objects.filter(Q(name__contains='employee') | Q(name__contains='manager')), required=True)
+    group = forms.ModelChoiceField(queryset=Group.objects.filter(Q(name='employee') | Q(name='manager')), required=True)
     class Meta:
         model = User
         fields = ['group']

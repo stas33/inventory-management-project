@@ -49,14 +49,14 @@
     <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
 </head>
 
-<body id="bg" style="background-repeat: no-repeat; background-size: cover;  background-image: url('{% static "img/tech.jpeg"%}')">
+<body id="bg" style="background-color: lightslategrey">
 {% include 'navbar.html' %}
 
 <div class="flex-column" style="margin-right: 40px; margin-left: 40px; margin-top: 10px">
     <div class="p-5 m-5">
         <div class="col-md-6 mx-auto pt-4 bg-dark">
             <h3 class="text-white text-center pb-2">Place Order</h3>
-            <form method="post" action="{% url 'submit' %}">
+            <form method="post" action="{% url 'submit_order' %}">
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="address" style="color: white">Address</label>

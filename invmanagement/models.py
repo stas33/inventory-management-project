@@ -41,14 +41,13 @@ User = get_user_model()
 
 
 class Customer(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    phone = models.IntegerField()
-    email = models.EmailField()
-    password = models.CharField(max_length=50)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=200, null=True)
+    phone = models.IntegerField(null=True)
+    email = models.EmailField(null=True)
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.name
 
     def get_customer_by_email(email):
         try:
@@ -108,4 +107,5 @@ class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
-
+    def __str__(self):
+        return self.user

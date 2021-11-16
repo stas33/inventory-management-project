@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product
+from .models import *
 from .forms import *
 from django.contrib import messages
 from django.http import HttpResponse
@@ -8,11 +8,43 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from invmanagement.authentications import unauthenticated_user, allowed_users
+from django.core.paginator import Paginator
 # Create your views here.
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'manager'])
+def categories(request):
+    header = 'Select a category'
+    queryset = Category.objects.all()
+    # pc = Product.objects.filter(category__id='1')
+    # pc_count = pc.count()
+    context = {
+        "header": header,
+        "queryset": queryset,
+        # "pc_count": pc_count
+    }
+    return render(request, "products/categories.html", context)
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager', 'customer'])
+@allowed_users(allowed_roles=['admin', 'manager'])
+def product_list(request, pk):
+    category = Category.objects.get(id=pk)
+    header = f"Products of category {category.name}"
+    queryset = Product.objects.filter(category__id=pk)
+
+    product_paginator = Paginator(queryset, 2)
+    page = request.GET.get('page')
+    prods = product_paginator.get_page(page)
+
+    context = {
+        'header': header,
+        'queryset': queryset,
+        'prods': prods
+    }
+    return render(request, 'products/product_list.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'manager'])
 def products(request):
     header = 'Available products'
     form = ProductSearchForm(request.POST or None)

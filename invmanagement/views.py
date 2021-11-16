@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
 from companies.models import Company
-from products.models import Product
+from products.models import *
 from orders.models import Order
 
 from companies.forms import *
@@ -15,6 +15,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from .authentications import unauthenticated_user, allowed_users
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -22,22 +23,33 @@ from .authentications import unauthenticated_user, allowed_users
 @unauthenticated_user
 def registerPage(request):
     form = CreateUserForm()
+    form1 = ActivateUserForm()
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
-        if form.is_valid():
+        form1 = ActivateUserForm(request.POST)
+        if form.is_valid() and form1.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
             reg_user = get_user_model().objects.get(username=username)
             reg_user.is_active = False
-            reg_user.save()
-            #group = Group.objects.get(name='customer')
-            #user.groups.add(group)
+            # group = Group.objects.get(name='customer')
+            # user.groups.add(group)
+            group = form1['group'].value()
+            if group == '3':
+                submitted_group = Group.objects.get(id=5)
+                reg_user.groups.add(submitted_group)
+                reg_user.save()
+            if group == '2':
+                submitted_group = Group.objects.get(id=6)
+                reg_user.groups.add(submitted_group)
+                reg_user.save()
 
-            messages.success(request, 'Register request for user {' + username + '} has been sent!')
-
+            messages.success(request, 'Register request for {' + username + '} has been sent!')
             return redirect('login')
 
-    context = {'form': form}
+    context = {'form': form,
+               'form1': form1
+               }
     return render(request, 'auth/register.html', context)
 
 
@@ -49,9 +61,15 @@ def registerCustomerPage(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
-
+            email = form.cleaned_data.get('email')
             group = Group.objects.get(name='customer')
             user.groups.add(group)
+
+            Customer.objects.create(
+                user=user,
+                name=username,
+                email=email
+            )
 
             messages.success(request, 'Account was created for customer: ' + username)
 
@@ -59,6 +77,7 @@ def registerCustomerPage(request):
 
     context = {'form': form}
     return render(request, 'auth/register-customer.html', context)
+
 
 @unauthenticated_user
 def loginPage(request):
@@ -72,8 +91,10 @@ def loginPage(request):
             group = None
             if user.groups.exists():
                 group = request.user.groups.all()[0].name
-                #if user.is_super:
+                # if user.is_super:
                 #    return redirect('homePage_customers')
+            # if user.groups.all()[0].name == 'customer':
+            #     redirect('choose_categories')
             return redirect('home')
         else:
             messages.info(request, 'Username OR password is incorrect')
@@ -86,48 +107,75 @@ def logoutUser(request):
     logout(request)
     return redirect('login')
 
+
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
-def inactive_users(request):
-    header = 'Register requests'
-    #form = CustomerSearchForm(request.POST or None)
+def inactive_employees(request):
+    header = 'Employee register requests'
+    # form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
-    queryset = User.objects.filter(is_active=False)
+    queryset = User.objects.filter(is_active=False, groups__name='pending employee')
     context = {
-        #"form": form,
+        # "form": form,
         "header": header,
         "queryset": queryset,
     }
 
-    return render(request, "users/inactive_users.html", context)
+    return render(request, "users/inactive_employees.html", context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def inactive_managers(request):
+    header = 'Manager register requests'
+    # form = CustomerSearchForm(request.POST or None)
+    # group = request.user.groups.all().name == "customer"
+    queryset = User.objects.filter(is_active=False, groups__name='pending manager')
+    context = {
+        # "form": form,
+        "header": header,
+        "queryset": queryset,
+    }
+
+    return render(request, "users/inactive_managers.html", context)
 
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def activate_user(request, pk):
-    title = "Activate User"
+    title = "Choose Company"
     queryset = User.objects.get(id=pk)
     queryset1 = Company.objects.all()
-    form = ActivateUserForm(instance=queryset)
+    # form = ActivateUserForm(instance=queryset)
     form1 = ChooseCompanyForm(request.POST or None)
     if request.method == 'POST':
-        form = ActivateUserForm(request.POST, instance=queryset)
-        if form.is_valid():
-            queryset.is_active=True
-            group = form['group'].value()
-            queryset.groups.add(group)
-            queryset.save()
-            form.save()
-            if group == '3':
-                #form1 = ChooseCompanyForm(request.POST, instance=queryset1)
+        # form = ActivateUserForm(request.POST, instance=queryset)
+        if form1.is_valid():
+            queryset.is_active = True
+            # group = form['group'].value()
+            group = 'pending employee'.join(map(str, queryset.groups.all()))
+            # queryset.groups.add(group)
+            # queryset.save()
+            # form.save()
+            if group == 'pending employee':
+                # form1 = ChooseCompanyForm(request.POST, instance=queryset1)
+                activate_group = Group.objects.get(id=3)
+                queryset.groups.add(activate_group)
                 compid = form1['name'].value()
                 employee = Employee(user=User(id=pk), company=Company(id=compid))
+                queryset.save()
                 employee.save()
-            messages.success(request, 'User activated successfully!')
-            return redirect('/inactive_users')
+                messages.success(request, 'Employee activated successfully!')
+                return redirect('/inactive_employees')
+            else:
+                activate_group = Group.objects.get(id=2)
+                queryset.groups.add(activate_group)
+                queryset.save()
+                messages.success(request, 'Manager activated successfully!')
+                return redirect('/inactive_managers')
     context = {
         'title': title,
-        'form': form,
+        # 'form': form,
         'form1': form1
     }
     return render(request, 'users/activate_user.html', context)
@@ -167,7 +215,7 @@ def employees(request):
     form = EmployeeSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(groups__name='employee')
-    #queryset = Employee.objects.filter(user__groups__name='employee')
+    # queryset = Employee.objects.filter(user__groups__name='employee')
     context = {
         "form": form,
         "header": header,
@@ -190,8 +238,8 @@ def create_employee(request):
     form1 = CreateUserForm(request.POST or None)
     form2 = CreateEmployeeForm2(request.POST or None)
     if form1.is_valid() and form2.is_valid():
-        #form.save()
-        #user = User.objects.get(username=request.POST.get('username'))
+        # form.save()
+        # user = User.objects.get(username=request.POST.get('username'))
         username = request.POST.get('username')
         firstname = request.POST.get('first_name')
         lastname = request.POST.get('last_name')
@@ -205,7 +253,7 @@ def create_employee(request):
 
         userid = request.user.id
         companyid = request.POST.get('company')
-        #company=request.POST.get('company')
+        # company=request.POST.get('company')
         empcreated = Employee(user=User(id=userid), company=Company(companyid))
         empcreated.save()
         messages.success(request, 'Employee created successfully!')
@@ -224,7 +272,7 @@ def create_employee(request):
 def update_employee(request, pk):
     title = "Update Employee"
     queryset = User.objects.get(id=pk)
-    #queryset = Employee.objects.get(id=pk)
+    # queryset = Employee.objects.get(id=pk)
     form = EmployeeUpdateForm(instance=queryset)
     if request.method == 'POST':
         form = EmployeeUpdateForm(request.POST, instance=queryset)
@@ -264,6 +312,78 @@ def customers(request):
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'customer'])
+def choose_categories(request):
+    header = 'Select a product category'
+    queryset = Category.objects.all()
+    # pc = Product.objects.filter(category__id='1')
+    # pc_count = pc.count()
+    context = {
+        "header": header,
+        "queryset": queryset,
+        # "pc_count": pc_count
+    }
+    return render(request, "choose_categories.html", context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'customer'])
+def product_list_customer(request, pk):
+    category = Category.objects.get(id=pk)
+    queryset = Product.objects.filter(category__id=pk)
+
+    product_paginator = Paginator(queryset, 2)
+    page = request.GET.get('page')
+    prods = product_paginator.get_page(page)
+
+    # customer = request.user.customer
+    # order, created = Order.objects.get_or_create(customer=customer, status='Pending')
+    # items = order.orderitem_set.all()
+    # cartItems = order.get_cart_items
+
+    context = {
+        'queryset': queryset,
+        'prods': prods,
+        'shipping': False,
+        # 'cartItems':cartItems
+    }
+    return render(request, "users/product_list_customer.html", context)
+
+
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'customer'])
+# def update_cart(request, pk):
+#     if request.method == 'POST':
+#         product = request.POST.get('product')
+#         remove = request.POST.get('remove')
+#         cart = request.session.get('cart')
+#         if cart:
+#             quantity = cart.get(product)
+#             if quantity:
+#                 if remove:
+#                     if quantity <= 1:
+#                         cart.pop(product)
+#                     else:
+#                         cart[product] = quantity - 1
+#                 else:
+#                     cart[product] = quantity + 1
+#             else:
+#                 cart[product] = 1
+#         else:
+#             cart = {}
+#             cart[product] = 1
+#
+#         request.session['cart'] = cart
+#         print(request.session['cart'])
+#         return redirect(reverse())
+#
+#     else:
+#         products = Product.objects.all()
+#         context = {'products': products}
+#         return render(request, 'users/product_list_customer.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'customer'])
 def homePage_customers(request):
     if request.method == 'POST':
         product = request.POST.get('product')
@@ -293,5 +413,3 @@ def homePage_customers(request):
         products = Product.objects.all()
         context = {'products': products}
         return render(request, 'home_customer.html', context)
-
-
