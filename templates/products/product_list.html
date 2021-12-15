@@ -63,11 +63,11 @@
             </div>
         </div>
     {% endif %}
-    <div class="jumbotron" style="background-color: whitesmoke; margin-right: 600px">
-        <h1 style="margin-top: -30px; margin-bottom: 30px; color: black">{{ title }}</h1>
+    <div class="jumbotron" style="background-color: lightslategrey; color: white">
+        <h1 style="margin-top: -30px; margin-bottom: 30px; color: white">{{ title }}</h1>
         <form method="get">
             {{ filter.form.as_p }}
-        <button class="btn btn-dark" type="submit">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
         </form>
     </div>
 
@@ -123,7 +123,7 @@
                     {% endif %}
                 {% endfor %}
                 {% if prods.has_next %}
-                    <a class="btn btn-outline-info mb-4" href="?page={{ prods.next_page_number }}">Next</a>
+                    <a class="btn btn-outline-info mb-4" href="?page={{ prods.next_page_number }}">Next&raquo</a>
                     <a class="btn btn-outline-info mb-4" href="?page={{ prods.paginator.num_pages }}">Last</a>
                 {% endif %}
             </div>

@@ -14,7 +14,7 @@ from invmanagement.authentications import unauthenticated_user, allowed_users
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
 def company(request):
-    header = 'Company details'
+    header = 'Companies details'
     form = CompanySearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = Company.objects.all()

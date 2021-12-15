@@ -96,7 +96,7 @@
         {% endif %}
     {% endfor %}
     {% if prods.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ prods.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ prods.next_page_number }}">Next&raquo</a>
         <a class="btn btn-outline-info mb-4" href="?page={{ prods.paginator.num_pages }}">Last</a>
     {% endif %}
 </div>

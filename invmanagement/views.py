@@ -112,7 +112,7 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def inactive_employees(request):
-    header = 'Employee register requests'
+    header = 'Pending employee requests'
     # form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(is_active=False, groups__name='pending employee')
@@ -128,7 +128,7 @@ def inactive_employees(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def inactive_managers(request):
-    header = 'Manager register requests'
+    header = 'Pending manager requests'
     # form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(is_active=False, groups__name='pending manager')
