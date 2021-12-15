@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from invmanagement.authentications import unauthenticated_user, allowed_users
 from django.core.paginator import Paginator
+from .filters import ProductSearchFilter
 # Create your views here.
 
 @login_required(login_url='login')
@@ -32,14 +33,19 @@ def product_list(request, pk):
     header = f"Products of category {category.name}"
     queryset = Product.objects.filter(category__id=pk)
 
-    product_paginator = Paginator(queryset, 2)
+    filter = ProductSearchFilter(request.GET, queryset=queryset)
+    title = "Advanced Search"
+
+    product_paginator = Paginator(filter.qs, 2)
     page = request.GET.get('page')
     prods = product_paginator.get_page(page)
 
     context = {
         'header': header,
         'queryset': queryset,
-        'prods': prods
+        'prods': prods,
+        'filter': filter,
+        'title': title,
     }
     return render(request, 'products/product_list.html', context)
 

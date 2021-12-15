@@ -64,45 +64,48 @@
 
         </div>
     {% endif %}
+    <div class="jumbotron" style="background-color: whitesmoke; margin-right: 600px">
+        <h1 style="margin-top: -30px; margin-bottom: 30px; color: black">{{ title }}</h1>
+        <form method="get">
+            {{ filter.form.as_p }}
+            <button class="btn btn-dark" type="submit">Search</button>
+        </form>
+    </div>
+
+
+    <br>
+    <!--<div class="mb-5">
+        <a href="/create_employee" class="btn btn-primary float-right">Add employee</a>.
+    </div> -->
+
     <div class="jumbotron" style="background-color: lightgrey">
         <div class="header">{{ header }}</div>
-
-        <form method='POST' action=''>{% csrf_token %}
-            {{ form|crispy }}
-            <input type="submit" value='Search'/>
-        </form>
         <br>
-        <!--<div class="mb-5">
-            <a href="/create_employee" class="btn btn-primary float-right">Add employee</a>.
-        </div> -->
-
-        <div class="display_table">
-            <table class='table'>
-                <thead>
+        <table class='table'>
+            <thead>
+            <tr>
+                <th>COUNT</th>
+                <th>FIRST NAME</th>
+                <th>LAST NAME</th>
+                <th>USERNAME</th>
+                <th>EMAIL</th>
+                <th>DATE JOINED</th>
+                <th></th>
+            </tr>
+            </thead>
+            {% for instance in queryset %}
                 <tr>
-                    <th>COUNT</th>
-                    <th>FIRST NAME</th>
-                    <th>LAST NAME</th>
-                    <th>USERNAME</th>
-                    <th>EMAIL</th>
-                    <th>DATE JOINED</th>
-                    <th></th>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ instance.first_name }}</td>
+                    <td>{{ instance.last_name }}</td>
+                    <td>{{ instance.username }}</td>
+                    <td>{{ instance.email }}</td>
+                    <td>{{ instance.date_joined }}</td>
+                    <td><a href="{% url 'update_employee' instance.id %}"><img
+                            src="{% static 'img/pencil-fill.svg' %}"></a></td>
                 </tr>
-                </thead>
-                {% for instance in queryset %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ instance.first_name }}</td>
-                        <td>{{ instance.last_name }}</td>
-                        <td>{{ instance.username }}</td>
-                        <td>{{ instance.email }}</td>
-                        <td>{{ instance.date_joined }}</td>
-                        <td><a href="{% url 'update_employee' instance.id %}"><img
-                                    src="{% static 'img/pencil-fill.svg' %}"></a></td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
+            {% endfor %}
+        </table>
     </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

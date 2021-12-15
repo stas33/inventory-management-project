@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'invmanagement',
     'orders',
     'products',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from products.models import Product
 from .forms import *
+from .filters import *
 from django.contrib import messages
 from django.http import HttpResponse
 from django.forms import inlineformset_factory
@@ -24,11 +25,16 @@ def orders(request):
     # queryset = Order.objects.filter(user__groups__name='customer',
     #                                 )
     queryset = Order.objects.all()
+    filter = OrderSearchFilter(request.GET, queryset=queryset)
+    queryset = filter.qs
+    title = "Advanced Search"
 
     context = {
         # "form": form,
         "header": header,
         "queryset": queryset,
+        "filter": filter,
+        "title": title,
     }
     # if request.method == 'POST':
     #     # queryset = Order.objects.filter(user__in=form['user'].value(),
@@ -145,7 +151,6 @@ def checkout(request):
     #     order, created = orders.last()
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
-
     else:
         items = []
         order = {'get_cart_total': 0, 'get_cart_items': 0, 'shipping': False}

@@ -22,4 +22,4 @@ class ProductSearchForm(forms.ModelForm):
 class ProductUpdateForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'prod_name', 'quantity']
+        fields = ['prod_name', 'quantity', 'availability']

@@ -64,40 +64,43 @@
 
         </div>
     {% endif %}
-    <div class="jumbotron" style="background-color: lightgrey">
-        <div class="header">{{ header }}</div>
-
-        <form method='POST' action=''>{% csrf_token %}
-            {{ form|crispy }}
-            <input type="submit" value='Search'/>
+    <div class="jumbotron" style="background-color: whitesmoke; margin-right: 600px">
+        <h1 style="margin-top: -30px; margin-bottom: 30px; color: black">{{ title }}</h1>
+        <form method="get">
+            {{ filter.form.as_p }}
+            <button class="btn btn-dark" type="submit">Search</button>
         </form>
-        <br>
-
-        <div class="display_table">
-            <table class='table'>
-                <thead>
-                <tr>
-                    <th>COUNT</th>
-                    <th>FIRST NAME</th>
-                    <th>LAST NAME</th>
-                    <th>USERNAME</th>
-                    <th>EMAIL</th>
-                    <th>DATE JOINED</th>
-                </tr>
-                </thead>
-                {% for instance in queryset %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ instance.first_name }}</td>
-                        <td>{{ instance.last_name }}</td>
-                        <td>{{ instance.username }}</td>
-                        <td>{{ instance.email }}</td>
-                        <td>{{ instance.date_joined }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
     </div>
+
+    <br>
+
+    <div class="jumbotron" style="background-color: lightgrey">
+    <div class="header">{{ header }}</div>
+    <br>
+        <table class='table'>
+            <thead>
+            <tr>
+                <th>COUNT</th>
+                <th>FIRST NAME</th>
+                <th>LAST NAME</th>
+                <th>USERNAME</th>
+                <th>EMAIL</th>
+                <th>DATE JOINED</th>
+            </tr>
+            </thead>
+            {% for instance in queryset %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ instance.first_name }}</td>
+                    <td>{{ instance.last_name }}</td>
+                    <td>{{ instance.username }}</td>
+                    <td>{{ instance.email }}</td>
+                    <td>{{ instance.date_joined }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
 </main>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

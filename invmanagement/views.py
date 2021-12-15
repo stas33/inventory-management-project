@@ -4,7 +4,8 @@ from .forms import *
 from companies.models import Company
 from products.models import *
 from orders.models import Order
-
+from products.filters import ProductCustomerFilter
+from .filters import *
 from companies.forms import *
 from django.contrib import messages
 from django.http import HttpResponse
@@ -212,23 +213,28 @@ def home(request):
 @allowed_users(allowed_roles=['admin', 'manager'])
 def employees(request):
     header = 'Employees list'
-    form = EmployeeSearchForm(request.POST or None)
+    # form = EmployeeSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(groups__name='employee')
+    filter = EmployeeSearchFilter(request.GET, queryset=queryset)
+    queryset = filter.qs
+    title = "Advanced Search"
+
     # queryset = Employee.objects.filter(user__groups__name='employee')
     context = {
-        "form": form,
         "header": header,
+        "title": title,
+        "filter": filter,
         "queryset": queryset,
     }
-    if request.method == 'POST':
-        queryset = User.objects.filter(username__icontains=form['username'].value())
-        # form.fields['customer'].queryset = User.objects.filter()
-        context = {
-            "form": form,
-            "header": header,
-            "queryset": queryset,
-        }
+    # if request.method == 'POST':
+    #     queryset1 = User.objects.filter(username__icontains=form['username'].value())
+    #     # form.fields['customer'].queryset = User.objects.filter()
+    #     context = {
+    #         "form": form,
+    #         "header": header,
+    #         "queryset": queryset,
+    #     }
     return render(request, "users/list_employees.html", context)
 
 
@@ -291,22 +297,27 @@ def update_employee(request, pk):
 @allowed_users(allowed_roles=['admin', 'employee'])
 def customers(request):
     header = 'Registered customers'
-    form = CustomerSearchForm(request.POST or None)
+    #form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(groups__name='customer')
+    filter = CustomerSearchFilter(request.GET, queryset=queryset)
+    queryset = filter.qs
+    title = "Advanced Search"
     context = {
-        "form": form,
+        "title": title,
+        "filter": filter,
         "header": header,
         "queryset": queryset,
     }
-    if request.method == 'POST':
-        queryset = User.objects.filter(email__icontains=form['email'].value())
-        # form.fields['customer'].queryset = User.objects.filter()
-        context = {
-            "form": form,
-            "header": header,
-            "queryset": queryset,
-        }
+
+    # if request.method == 'POST':
+    #     queryset = User.objects.filter(email__icontains=form['email'].value())
+    #     # form.fields['customer'].queryset = User.objects.filter()
+    #     context = {
+    #         "form": form,
+    #         "header": header,
+    #         "queryset": queryset,
+    #     }
     return render(request, "users/list_customers.html", context)
 
 
@@ -331,10 +342,16 @@ def product_list_customer(request, pk):
     category = Category.objects.get(id=pk)
     queryset = Product.objects.filter(category__id=pk)
 
-    product_paginator = Paginator(queryset, 2)
+    filter = ProductCustomerFilter(request.GET, queryset=queryset)
+
+    #product_paginator = Paginator(queryset, 2)
+    title = "Advanced Search"
+    product_paginator = Paginator(filter.qs, 2)
     page = request.GET.get('page')
     prods = product_paginator.get_page(page)
 
+    # filter = ProductFilter(request.GET, queryset=prods)
+    # prods = filter.qs
     # customer = request.user.customer
     # order, created = Order.objects.get_or_create(customer=customer, status='Pending')
     # items = order.orderitem_set.all()
@@ -344,6 +361,8 @@ def product_list_customer(request, pk):
         'queryset': queryset,
         'prods': prods,
         'shipping': False,
+        'filter': filter,
+        'title': title,
         # 'cartItems':cartItems
     }
     return render(request, "users/product_list_customer.html", context)
