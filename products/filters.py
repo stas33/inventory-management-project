@@ -1,14 +1,17 @@
 import django_filters
 from .models import *
+from dal import autocomplete
+
 
 class ProductCustomerFilter(django_filters.FilterSet):
     prod_name = django_filters.CharFilter(label='Product name', lookup_expr='icontains')
     price__gt = django_filters.NumberFilter(field_name='price', lookup_expr='gt')
     price__lt = django_filters.NumberFilter(field_name='price', lookup_expr='lt')
+    order = django_filters.OrderingFilter(fields=('price','price'))
 
     class Meta:
         model = Product
-        fields = ['prod_name']
+        fields = ['prod_name', 'order']
 
 
 class ProductSearchFilter(django_filters.FilterSet):
@@ -20,4 +23,4 @@ class ProductSearchFilter(django_filters.FilterSet):
 
     class Meta:
         model = Product
-        fields = ['availability']
+        fields = ['availability', 'prod_name']

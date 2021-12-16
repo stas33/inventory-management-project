@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from .authentications import unauthenticated_user, allowed_users
 from django.core.paginator import Paginator
+from dal import autocomplete
 
 
 # Create your views here.
@@ -343,8 +344,10 @@ def product_list_customer(request, pk):
     queryset = Product.objects.filter(category__id=pk)
 
     filter = ProductCustomerFilter(request.GET, queryset=queryset)
-
+    #print(filter.form.cleaned_data.get('order'))
     #product_paginator = Paginator(queryset, 2)
+    # field = filter._meta.fields
+    # print(field)
     title = "Advanced Search"
     product_paginator = Paginator(filter.qs, 2)
     page = request.GET.get('page')
@@ -432,3 +435,12 @@ def homePage_customers(request):
         products = Product.objects.all()
         context = {'products': products}
         return render(request, 'home_customer.html', context)
+
+# class CustomerAutocomplete(autocomplete.Select2QuerySetView):
+#     def get_queryset(self):
+#         # if not self.request.user.is_authenticated():
+#         #     return Product.objects.none()
+#         qs = Customer.objects.all()
+#         if self.q:
+#             qs = qs.filter(name__istartswith=self.q)
+#         return qs

@@ -10,6 +10,7 @@ from django.contrib.auth.models import Group, User
 from invmanagement.authentications import unauthenticated_user, allowed_users
 from django.core.paginator import Paginator
 from .filters import ProductSearchFilter
+from dal import autocomplete
 # Create your views here.
 
 @login_required(login_url='login')
@@ -32,6 +33,9 @@ def product_list(request, pk):
     category = Category.objects.get(id=pk)
     header = f"Products of category {category.name}"
     queryset = Product.objects.filter(category__id=pk)
+    for prod in queryset:
+        if prod.quantity == 0:
+            messages.warning(request, f"The quantity of product {prod.prod_name} is zero!")
 
     filter = ProductSearchFilter(request.GET, queryset=queryset)
     title = "Advanced Search"
@@ -99,7 +103,7 @@ def update_product(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Product updated successfully!')
-            return redirect('/products')
+            return redirect(f'/products/categories/{pk}')
     context = {
         'title': title,
         'form': form
@@ -114,5 +118,15 @@ def delete_product(request, pk):
     if request.method == 'POST':
         queryset.delete()
         messages.success(request, 'Product deleted successfully!')
-        return redirect('/products')
+        return redirect(f'/products/categories/{pk}')
     return render(request, 'products/delete_product.html')
+
+
+# class ProductAutocomplete(autocomplete.Select2QuerySetView):
+#     def get_queryset(self):
+#         # if not self.request.user.is_authenticated():
+#         #     return Product.objects.none()
+#         qs = Product.objects.all()
+#         if self.q:
+#             qs = qs.filter(prod_name__istartswith=self.q)
+#         return qs

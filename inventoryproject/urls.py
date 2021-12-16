@@ -37,6 +37,7 @@ from invmanagement.views import (
     homePage_customers,
     choose_categories,
     product_list_customer,
+    # CustomerAutocomplete
     #update_cart
 )
 from companies.views import (
@@ -65,7 +66,8 @@ from products.views import (
     products,
     create_product,
     update_product,
-    delete_product
+    delete_product,
+    # ProductAutocomplete
 )
 
 urlpatterns = [
@@ -73,6 +75,8 @@ urlpatterns = [
     path('register-customer/', registerCustomerPage, name="register-customer"),
     path('login/', loginPage, name="login"),
     path('logout/', logoutUser, name="logout"),
+    # url(r'^product-autocomplete/$', ProductAutocomplete.as_view(), name='product-autocomplete'),
+    # url(r'^customer-autocomplete/$', CustomerAutocomplete.as_view(), name='customer-autocomplete'),
 
     path('admin/', admin.site.urls),
     path('', home, name='home'),

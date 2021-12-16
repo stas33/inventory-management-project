@@ -53,11 +53,12 @@
 {% include 'navbar.html' %}
 
 <main role="main" class="flex-column" style="margin-right: 40px; margin-left: 40px; margin-top: 10px">
+
     <div class="jumbotron" style="background-color: lightgrey">
         <h1 style="margin-top: -30px; margin-bottom: 30px">{{ title }}</h1>
         <form method="get">
             {{ filter.form.as_p }}
-        <button class="btn btn-primary" type="submit">Search</button>
+            <button class="btn btn-primary" type="submit">Search</button>
         </form>
     </div>
 </main>
@@ -71,10 +72,12 @@
             <div class="box-element product">
                 <h6><strong>{{ instance.prod_name }}</strong></h6>
                 <hr>
-                <button data-product={{ instance.id }} data-action="add"
-                        class="btn btn-outline-secondary add-btn update-cart">Add to Cart
-                </button>
-                <a class="btn btn-outline-success" href="#">View</a>
+                {% if instance.quantity > 0 %}
+                    <button data-product={{ instance.id }} data-action="add"
+                            class="btn btn-outline-info add-btn update-cart" style="margin-left: 10px">Add to Cart
+                    </button>
+                {% endif %}
+{#                <a class="btn btn-outline-success" href="#">View</a>#}
                 <h4 style="display: inline-block; float: right">{{ instance.price|currency }}</h4>
             </div>
         </div>
