@@ -77,7 +77,7 @@
         <p class="header"
            style="color: honeydew; text-shadow: none; margin-left: -10px; margin-top: -20px">{{ header }}</p>
         <div class="col-lg-12">
-            <div class="box-element" style="margin-left: 20px; margin-right: 20px; margin-top: 10px">
+            <div class="box-element" style="margin-left: 10px; margin-right: 10px; margin-top: 10px">
                 <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
                 margin-bottom: 10px; border-bottom: 1px solid #ececec">
 
@@ -101,8 +101,12 @@
                         <div style="flex:2">{{ order.date_ordered }}</div>
                         <div style="flex:2">{{ order.transaction_id }}}</div>
                         <div style="flex:1">{{ order.status }}</div>
+                        {% if order.status == 'Pending' or order.status == 'Processing' %}
                         <div style="flex:1"><a href="{% url 'update_order' order.id %}"><img
                                 src="{% static 'img/pencil-fill.svg' %}"></a></div>
+                        {% else %}
+                            <div style="flex:1"></div>
+                        {% endif %}
                         <div style="flex:2"><a href="{% url 'order_items' order.id %}" class="btn btn-outline-info">Order
                             items details</a></div>
                     </div>

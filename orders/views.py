@@ -92,6 +92,13 @@ def update_order(request, pk):
     if request.method == 'POST':
         form = OrderUpdateForm(request.POST, instance=queryset)
         if form.is_valid():
+            if form.cleaned_data.get("status") == 'Approved':
+                ord_items = OrderItem.objects.filter(order__id=pk)
+                for item in ord_items:
+                    prod = Product.objects.get(id=item.product.id)
+                    if prod.quantity > 0:
+                        prod.quantity = (prod.quantity - item.quantity)
+                        prod.save()
             form.save()
             messages.success(request, 'Order status updated successfully!')
             return redirect('/orders_list')

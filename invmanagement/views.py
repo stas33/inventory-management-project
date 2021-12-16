@@ -185,7 +185,7 @@ def activate_user(request, pk):
 
 @login_required(login_url='login')
 def home(request):
-    title = "Welcome: This is the home page of the inventory management system!"
+    title = "Welcome to the home page of the inventory management system!"
     product = Product.objects.all()
     product_count = product.count()
     order = Order.objects.all()
