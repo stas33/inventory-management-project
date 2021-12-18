@@ -78,16 +78,16 @@
         <p class="header"
            style="color: honeydew; text-shadow: none; margin-left: -10px; margin-top: -20px">{{ header }}</p>
         <div class="col-lg-12">
-            <div class="box-element" style="margin-left: 10px; margin-right: 10px; margin-top: 10px">
+            <div class="box-element" style="margin-top: 10px">
                 <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
                 margin-bottom: 10px; border-bottom: 1px solid #ececec">
 
-                    <div style="flex:1"><strong>Customer Name</strong></div>
+                    <div style="flex:1"><strong>Customer Username</strong></div>
                     <div style="flex:2"><strong>Customer Email</strong></div>
-                    <div style="flex:2"><strong>Customer Phone</strong></div>
                     <div style="flex:2"><strong>Order Date</strong></div>
                     <div style="flex:2"><strong>Trnasaction Id</strong></div>
                     <div style="flex:1"><strong>Status</strong></div>
+                    <div style="flex:1"><strong>Total</strong></div>
                     <div style="flex:1"><strong>Update Status</strong></div>
                     <div style="flex:2"><strong></strong></div>
                 </div>
@@ -98,10 +98,11 @@
 
                         <div style="flex:1">{{ order.customer.name }}</div>
                         <div style="flex:2">{{ order.customer.email }}</div>
-                        <div style="flex:2">{{ order.customer.phone }}</div>
                         <div style="flex:2">{{ order.date_ordered }}</div>
                         <div style="flex:2">{{ order.transaction_id }}}</div>
                         <div style="flex:1">{{ order.status }}</div>
+                        <div style="flex:1">{{ order.get_cart_total|currency }}</div>
+
                         {% if order.status == 'Pending' or order.status == 'Processing' %}
                             <div style="flex:1"><a href="{% url 'update_order' order.id %}"><img
                                     src="{% static 'img/pencil-fill.svg' %}"></a></div>
@@ -118,22 +119,22 @@
         <hr>
         <div style="margin-left: 30px; margin-top: 30px">
             {% if ord.has_previous %}
-                <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
-                <a class="btn btn-outline-info mb-4"
+                <a class="btn btn-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+                <a class="btn btn-info mb-4"
                    href="{% my_url ord.previous_page_number 'page' request.GET.urlencode %}">&laquoPrevious</a>
             {% endif %}
             {% for num in ord.paginator.page_range %}
                 {% if ord.number == num %}
                     <a class="btn btn-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
                 {% elif num > ord.number|add:'-3' and num < ord.number|add:'3' %}
-                    <a class="btn btn-outline-info mb-4"
+                    <a class="btn btn-info mb-4"
                        href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
                 {% endif %}
             {% endfor %}
             {% if ord.has_next %}
-                <a class="btn btn-outline-info mb-4"
+                <a class="btn btn-info mb-4"
                    href="{% my_url ord.next_page_number 'page' request.GET.urlencode %}">Next&raquo</a>
-                <a class="btn btn-outline-info mb-4"
+                <a class="btn btn-info mb-4"
                    href="{% my_url ord.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
             {% endif %}
         </div>

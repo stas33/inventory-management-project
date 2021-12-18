@@ -75,22 +75,25 @@
                 margin-bottom: 10px; border-bottom: 1px solid #ececec">
 
                     <div style="flex:1"><strong>Product Name</strong></div>
-                    <div style="flex:1"><strong>Customer Name</strong></div>
+                    <div style="flex:1"><strong>Customer Username</strong></div>
                     <div style="flex:1"><strong>Order Date</strong></div>
                     <div style="flex:1"><strong>Quantity</strong></div>
+                    <div style="flex:1"><strong>Price</strong></div>
                 </div>
 
                 {% for item in queryset %}
-                    <div class="cart-row" style="display: flex; align-items: flex-start; padding-bottom: 10px;
+                    <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
                 margin-bottom: 10px; border-bottom: 1px solid #ececec">
 
                         <div style="flex:1">{{ item.product.prod_name }}</div>
                         <div style="flex:1">{{ item.order.customer.name }}</div>
                         <div style="flex:1">{{ item.date_added }}</div>
                         <div style="flex:1">{{ item.quantity }}</div>
+                        <div style="flex:1">{{ item.product.price|currency }}</div>
 
                     </div>
                 {% endfor %}
+{#                <h5>Total: {{  }}</h5>#}
             </div>
         </div>
     </div>

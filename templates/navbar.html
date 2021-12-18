@@ -39,7 +39,7 @@
             {% endif %}
             {% if request.user.groups.all.0.name == "employee" %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/employee">Orders list</a>
+                    <a class="nav-link" href="/orders_list">Orders list</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/employee/customers">Customers information</a>
@@ -47,10 +47,10 @@
             {% endif %}
             {% if request.user.groups.all.0.name == "customer" %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/customer/products/choose_category/">Navigate Products</a>
+                    <a class="nav-link" href="/customer/products/choose_category">Navigate Products</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/customer/mycart/">My Cart</a>
+                    <a class="nav-link" href="/customer/mycart">My Cart</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="/customer/myorders">My Orders</a>
