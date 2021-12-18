@@ -1,5 +1,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
+{% load filter_pages %}
 
 <!doctype html>
 <html lang="en">
@@ -61,9 +62,15 @@
                     </div>
                 {% endfor %}
             </div>
-
         </div>
     {% endif %}
+    <div class="jumbotron" style="background-color: lightslategrey; color: white">
+        <h1 style="margin-top: -30px; margin-bottom: 30px; color: white">{{ title }}</h1>
+        <form method="get">
+            {{ filter.form.as_p }}
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div>
     <div class="jumbotron" style="background-color: lightgrey">
         <div class="header">{{ header }}</div>
         <br>
@@ -81,7 +88,7 @@
                     <th></th>
                 </tr>
                 </thead>
-                {% for instance in queryset %}
+                {% for instance in mgrs %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ instance.first_name }}</td>
@@ -94,6 +101,26 @@
                     </tr>
                 {% endfor %}
             </table>
+            <br><br>
+            <div style="margin-left: 10px">
+                {% if mgrs.has_previous %}
+                    <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+                    <a class="btn btn-outline-info mb-4"
+                       href="{% my_url mgrs.previous_page_number 'page' request.GET.urlencode %}">&laquoPrevious</a>
+                {% endif %}
+                {% for num in mgrs.paginator.page_range %}
+                    {% if mgrs.number == num %}
+                        <a class="btn btn-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+                    {% elif num > mgrs.number|add:'-3' and num < mgrs.number|add:'3' %}
+                        <a class="btn btn-outline-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if mgrs.has_next %}
+                    <a class="btn btn-outline-info mb-4" href="{% my_url mgrs.next_page_number 'page' request.GET.urlencode %}">Next&raquo</a>
+                    <a class="btn btn-outline-info mb-4" href="{% my_url mgrs.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
+                {% endif %}
+            </div>
+            <br>
         </div>
     </div>
 </main>

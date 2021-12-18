@@ -9,28 +9,33 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from invmanagement.authentications import unauthenticated_user, allowed_users
+from django.core.paginator import Paginator
 # Create your views here.
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
 def company(request):
     header = 'Companies details'
-    form = CompanySearchForm(request.POST or None)
+    #form = CompanySearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = Company.objects.all()
+    comp_paginator = Paginator(queryset, 2)
+    page = request.GET.get('page')
+    companies = comp_paginator.get_page(page)
     context = {
-        "form": form,
+        #"form": form,
         "header": header,
         "queryset": queryset,
+        "companies": companies,
     }
-    if request.method == 'POST':
-        queryset = Company.objects.filter(name=form['name'].value())
-        # form.fields['customer'].queryset = User.objects.filter()
-        context = {
-            "form": form,
-            "header": header,
-            "queryset": queryset,
-        }
+    # if request.method == 'POST':
+    #     queryset = Company.objects.filter(name=form['name'].value())
+    #     # form.fields['customer'].queryset = User.objects.filter()
+    #     context = {
+    #         "form": form,
+    #         "header": header,
+    #         "queryset": queryset,
+    #     }
     return render(request, "companies/list_companies.html", context)
 
 

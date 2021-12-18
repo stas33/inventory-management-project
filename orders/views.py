@@ -13,6 +13,7 @@ from invmanagement.authentications import unauthenticated_user, allowed_users
 import datetime
 from django.http import JsonResponse
 import json
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -26,8 +27,10 @@ def orders(request):
     #                                 )
     queryset = Order.objects.all()
     filter = OrderSearchFilter(request.GET, queryset=queryset)
-    queryset = filter.qs
     title = "Advanced Search"
+    order_paginator = Paginator(filter.qs, 2)
+    page = request.GET.get('page')
+    ord = order_paginator.get_page(page)
 
     context = {
         # "form": form,
@@ -35,6 +38,7 @@ def orders(request):
         "queryset": queryset,
         "filter": filter,
         "title": title,
+        "ord": ord,
     }
     # if request.method == 'POST':
     #     # queryset = Order.objects.filter(user__in=form['user'].value(),

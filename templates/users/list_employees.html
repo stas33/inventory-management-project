@@ -1,5 +1,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
+{% load filter_pages %}
 
 <!doctype html>
 <html lang="en">
@@ -93,7 +94,7 @@
                 <th></th>
             </tr>
             </thead>
-            {% for instance in queryset %}
+            {% for instance in employees %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ instance.first_name }}</td>
@@ -106,6 +107,26 @@
                 </tr>
             {% endfor %}
         </table>
+        <br><br>
+            <div style="margin-left: 10px">
+                {% if employees.has_previous %}
+                    <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+                    <a class="btn btn-outline-info mb-4"
+                       href="{% my_url employees.previous_page_number 'page' request.GET.urlencode %}">&laquoPrevious</a>
+                {% endif %}
+                {% for num in employees.paginator.page_range %}
+                    {% if employees.number == num %}
+                        <a class="btn btn-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+                    {% elif num > employees.number|add:'-3' and num < employees.number|add:'3' %}
+                        <a class="btn btn-outline-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if employees.has_next %}
+                    <a class="btn btn-outline-info mb-4" href="{% my_url employees.next_page_number 'page' request.GET.urlencode %}">Next&raquo</a>
+                    <a class="btn btn-outline-info mb-4" href="{% my_url employees.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
+                {% endif %}
+            </div>
+            <br>
     </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

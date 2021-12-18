@@ -1,6 +1,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load cart %}
+{% load filter_pages %}
 
 <!doctype html>
 <html lang="en">
@@ -87,20 +88,20 @@
 <hr>
 <div style="margin-left: 30px">
     {% if prods.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
         <a class="btn btn-outline-info mb-4"
-           href="?page={{ prods.previous_page_number }}">&laquoPrevious</a>
+           href="{% my_url prods.previous_page_number 'page' request.GET.urlencode %}">&laquoPrevious</a>
     {% endif %}
     {% for num in prods.paginator.page_range %}
         {% if prods.number == num %}
-            <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            <a class="btn btn-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
         {% elif num > prods.number|add:'-3' and num < prods.number|add:'3' %}
-            <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+            <a class="btn btn-outline-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
         {% endif %}
     {% endfor %}
     {% if prods.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ prods.next_page_number }}">Next&raquo</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ prods.paginator.num_pages }}">Last</a>
+        <a class="btn btn-outline-info mb-4" href="{% my_url prods.next_page_number 'page' request.GET.urlencode %}">Next&raquo</a>
+        <a class="btn btn-outline-info mb-4" href="{% my_url prods.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
     {% endif %}
 </div>
 <br>

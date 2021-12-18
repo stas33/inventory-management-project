@@ -42,6 +42,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '13.80.177.112']
 INSTALLED_APPS = [
     'dal',
     'dal_select2',
+    #'products.apps.ProductsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

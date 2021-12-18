@@ -117,10 +117,17 @@ def inactive_employees(request):
     # form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(is_active=False, groups__name='pending employee')
+    filter = EmployeeSearchFilter(request.GET, queryset=queryset)
+    title = 'Advanced Search'
+    empl_paginator = Paginator(filter.qs, 2)
+    page = request.GET.get('page')
+    emps = empl_paginator.get_page(page)
     context = {
-        # "form": form,
+        "title": title,
         "header": header,
         "queryset": queryset,
+        "emps": emps,
+        "filter": filter,
     }
 
     return render(request, "users/inactive_employees.html", context)
@@ -133,10 +140,17 @@ def inactive_managers(request):
     # form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(is_active=False, groups__name='pending manager')
+    filter = ManagerSearchFilter(request.GET, queryset=queryset)
+    title = 'Advanced Search'
+    mgr_paginator = Paginator(filter.qs, 2)
+    page = request.GET.get('page')
+    mgrs = mgr_paginator.get_page(page)
     context = {
-        # "form": form,
+        "title": title,
         "header": header,
         "queryset": queryset,
+        "mgrs": mgrs,
+        "filter": filter,
     }
 
     return render(request, "users/inactive_managers.html", context)
@@ -218,8 +232,10 @@ def employees(request):
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(groups__name='employee')
     filter = EmployeeSearchFilter(request.GET, queryset=queryset)
-    queryset = filter.qs
     title = "Advanced Search"
+    employees_paginator = Paginator(filter.qs, 2)
+    page = request.GET.get('page')
+    employees = employees_paginator.get_page(page)
 
     # queryset = Employee.objects.filter(user__groups__name='employee')
     context = {
@@ -227,6 +243,7 @@ def employees(request):
         "title": title,
         "filter": filter,
         "queryset": queryset,
+        "employees": employees,
     }
     # if request.method == 'POST':
     #     queryset1 = User.objects.filter(username__icontains=form['username'].value())
@@ -302,13 +319,16 @@ def customers(request):
     # group = request.user.groups.all().name == "customer"
     queryset = User.objects.filter(groups__name='customer')
     filter = CustomerSearchFilter(request.GET, queryset=queryset)
-    queryset = filter.qs
     title = "Advanced Search"
+    cust_paginator = Paginator(filter.qs, 2)
+    page = request.GET.get('page')
+    custs = cust_paginator.get_page(page)
     context = {
         "title": title,
         "filter": filter,
         "header": header,
         "queryset": queryset,
+        "custs": custs
     }
 
     # if request.method == 'POST':
