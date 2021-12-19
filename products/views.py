@@ -53,28 +53,28 @@ def product_list(request, pk):
     }
     return render(request, 'products/product_list.html', context)
 
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'manager'])
-def products(request):
-    header = 'Available products'
-    form = ProductSearchForm(request.POST or None)
-
-    queryset = Product.objects.all()
-    context = {
-        "form": form,
-        "header": header,
-        "queryset": queryset,
-    }
-    if request.method == 'POST':
-        queryset = Product.objects.filter(category__icontains=form['category'].value(),
-                                          prod_name__icontains=form['prod_name'].value()
-                                          )
-        context = {
-            "form": form,
-            "header": header,
-            "queryset": queryset,
-        }
-    return render(request, "products/list_products.html", context)
+# @login_required(login_url='login')
+# @allowed_users(allowed_roles=['admin', 'manager'])
+# def products(request):
+#     header = 'Available products'
+#     form = ProductSearchForm(request.POST or None)
+#
+#     queryset = Product.objects.all()
+#     context = {
+#         "form": form,
+#         "header": header,
+#         "queryset": queryset,
+#     }
+#     if request.method == 'POST':
+#         queryset = Product.objects.filter(category__icontains=form['category'].value(),
+#                                           prod_name__icontains=form['prod_name'].value()
+#                                           )
+#         context = {
+#             "form": form,
+#             "header": header,
+#             "queryset": queryset,
+#         }
+#     return render(request, "products/list_products.html", context)
 
 
 @login_required(login_url='login')
@@ -122,11 +122,11 @@ def delete_product(request, pk):
     return render(request, 'products/delete_product.html')
 
 
-# class ProductAutocomplete(autocomplete.Select2QuerySetView):
-#     def get_queryset(self):
-#         # if not self.request.user.is_authenticated():
-#         #     return Product.objects.none()
-#         qs = Product.objects.all()
-#         if self.q:
-#             qs = qs.filter(prod_name__istartswith=self.q)
-#         return qs
+class ProductAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # if not self.request.user.is_authenticated():
+        #     return Product.objects.none()
+        qs = Product.objects.all()
+        if self.q:
+            qs = qs.filter(prod_name__istartswith=self.q)
+        return qs

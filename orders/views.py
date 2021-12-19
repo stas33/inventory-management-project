@@ -14,6 +14,7 @@ import datetime
 from django.http import JsonResponse
 import json
 from django.core.paginator import Paginator
+from dal import autocomplete
 
 
 # Create your views here.
@@ -55,7 +56,7 @@ def orders(request):
 
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['admin', 'employee'])
+@allowed_users(allowed_roles=['admin', 'employee', 'customer'])
 def order_items(request, pk):
     header = f'Items of order with id { {pk} }'
     # form = OrderSearchForm(request.POST or None)
@@ -70,6 +71,18 @@ def order_items(request, pk):
     }
 
     return render(request, "orders/order_items.html", context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin', 'employee', 'customer'])
+def shipping_info(request, pk):
+    header = f'Shipping info for order with id { {pk} }'
+    queryset = Shipping.objects.filter(order__id=pk)
+    context = {
+        "header": header,
+        "queryset": queryset
+    }
+    return  render(request, "orders/shipping_info.html", context)
 
 
 @login_required(login_url='login')
@@ -139,14 +152,6 @@ def mycart(request):
     # cart_product_id = list(request.session.get('cart').keys())
     # cart_product = Product.get_products_by_id(cart_product_id)
     # return render(request, 'orders/my_cart.html', {'cart_product': cart_product, 'order': order})
-
-
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin', 'customer'])
-# def cart(request):
-#     cart_product_id = list(request.session.get('cart').keys())
-#     cart_product = Product.get_products_by_id(cart_product_id)
-#     return render(request, 'orders/cart.html', {'cart_product': cart_product})
 
 
 @login_required(login_url='login')
@@ -230,28 +235,6 @@ def processOrder(request):
     #return redirect("/customer/myorders/")
 
 
-# @login_required(login_url='login')
-# @allowed_users(allowed_roles=['admin', 'customer'])
-# def submit(request):
-#     if request.method == "POST":
-#         address = request.POST.get("address")
-#         phone = request.POST.get("phone")
-#         user = request.user.id
-#         # customer = request.session.get("customer")
-#         cart = request.session.get("cart")
-#         products = Product.get_products_by_id(list(cart.keys()))
-#         for product in products:
-#             order = Order(user=User(id=user), product=product, price=product.price, address=address,
-#                           phone=phone, quantity=cart.get(str(product.id)), status="Pending")
-#             order.save()
-#
-#         request.session['cart'] = {}
-#         messages.success(request, 'Order submitted successfully!')
-#         return redirect("homePage_customers")
-#     else:
-#         return render(request, 'orders/submit_order.html')
-
-
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'customer'])
 def orderpage(request):
@@ -264,3 +247,4 @@ def orderpage(request):
     orders = Order.objects.filter(customer=customer)
     # orderItems = OrderItem.objects.filter(order__customer=customer)
     return render(request, 'orders/myorders.html', {'orders': orders, 'title': title})
+

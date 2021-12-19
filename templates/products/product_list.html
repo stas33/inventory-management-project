@@ -74,10 +74,10 @@
         </form>
     </div>
 
-    <div class="jumbotron" style="background-color: lightgrey">
+    <div class="jumbotron" style="background-color: lightgrey; margin-top: -60px; margin-bottom: 180px">
         <div class="header">{{ header }}</div>
         <br>
-        <div class="display_table">
+{#        <div class="display_table">#}
             <table class='table'>
                 <thead>
                 <tr>
@@ -112,7 +112,7 @@
                 {% endfor %}
             </table>
             <br><br>
-            <div style="margin-left: 10px">
+            <div style="margin-left: 10px; margin-bottom: -60px">
                 {% if prods.has_previous %}
                     <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
                     <a class="btn btn-outline-info mb-4"
@@ -131,7 +131,7 @@
                 {% endif %}
             </div>
             <br>
-        </div>
+{#        </div>#}
     </div>
 </main>
 

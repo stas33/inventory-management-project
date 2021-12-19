@@ -34,7 +34,7 @@ from invmanagement.views import (
     create_employee,
     update_employee,
     customers,
-    homePage_customers,
+    #homePage_customers,
     choose_categories,
     product_list_customer,
     # CustomerAutocomplete
@@ -57,17 +57,18 @@ from orders.views import (
     checkout,
     updateItem,
     processOrder,
-    redirect
+    redirect,
+    shipping_info
 
 )
 from products.views import (
     categories,
     product_list,
-    products,
+    #products,
     create_product,
     update_product,
     delete_product,
-    # ProductAutocomplete
+    ProductAutocomplete
 )
 
 urlpatterns = [
@@ -75,22 +76,22 @@ urlpatterns = [
     path('register-customer/', registerCustomerPage, name="register-customer"),
     path('login/', loginPage, name="login"),
     path('logout/', logoutUser, name="logout"),
-    # url(r'^product-autocomplete/$', ProductAutocomplete.as_view(), name='product-autocomplete'),
+    url(r'^product-autocomplete/$', ProductAutocomplete.as_view(), name='product-autocomplete'),
     # url(r'^customer-autocomplete/$', CustomerAutocomplete.as_view(), name='customer-autocomplete'),
-
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('inactive_employees/', inactive_employees, name='inactive_employees'),
     path('inactive_managers/', inactive_managers, name='inactive_managers'),
     path('activate_user/<str:pk>/', activate_user, name='activate_user'),
     path('orders_list/', orders, name='orders'),
-    path('orders_list/<str:pk>/order_items', order_items, name='order_items'),
+    path('orders_list/<str:pk>/order_items/', order_items, name='order_items'),
+    path('orders_list/<str:pk>/shipping/', shipping_info, name='shipping_info'),
     path('orders_list/update_order/<str:pk>/', update_order, name='update_order'),
     path('employee/customers', customers, name='customers'),
 
     path('products/categories/', categories, name='categories'),
     path('products/categories/<str:pk>/', product_list, name='product_list'),
-    path('products/', products, name='products'),
+    #path('products/', products, name='products'),
     path('create_product/', create_product, name='create_product'),
     path('update_product/<str:pk>/', update_product, name="update_product"),
     path('delete_product/<str:pk>/', delete_product, name="delete_product"),
@@ -101,7 +102,7 @@ urlpatterns = [
     path('update_company/<str:pk>/', update_company, name="update_company"),
     path('deactivate/<str:pk>/', deactivate, name="deactivate"),
 
-    path('home_customer/', homePage_customers, name="homePage_customers"),
+    # path('home_customer/', homePage_customers, name="homePage_customers"),
     path('customer/products/choose_category/', choose_categories, name="choose_categories"),
 
     path('customer/products/choose_category/<str:pk>/', product_list_customer, name="product_list_customer"),

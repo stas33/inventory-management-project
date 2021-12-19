@@ -79,7 +79,7 @@
         <a href="/create_employee" class="btn btn-primary float-right">Add employee</a>.
     </div> -->
 
-    <div class="jumbotron" style="background-color: lightgrey">
+    <div class="jumbotron" style="background-color: lightgrey; margin-top: -60px; margin-bottom: 200px">
         <div class="header">{{ header }}</div>
         <br>
         <table class='table'>
@@ -108,7 +108,7 @@
             {% endfor %}
         </table>
         <br><br>
-            <div style="margin-left: 10px">
+            <div style="margin-left: 10px; margin-bottom: -60px">
                 {% if employees.has_previous %}
                     <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
                     <a class="btn btn-outline-info mb-4"

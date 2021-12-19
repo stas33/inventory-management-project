@@ -63,7 +63,12 @@
                     <th><h5>Items: <strong>{{ order.get_cart_items }}</strong></h5></th>
                     <th><h5>Total: <strong>{{ order.get_cart_total|currency }}</strong></h5></th>
                     <th>
-                        <a href="{% url 'checkout' %}" class="btn btn-success float-right">Proceed to order placement</a>
+                        {% if order.get_cart_items != 0 %}
+                            <a href="{% url 'checkout' %}" class="btn btn-success float-right">Proceed to order placement</a>
+                        {% else %}
+{#                            <a class="disable-link btn btn-success float-right">Proceed to order placement</a>#}
+                            <button type="button" class="btn btn-success float-right" disabled>Proceed to order placement</button>
+                        {% endif %}
                     </th>
                 </tr>
             </table>

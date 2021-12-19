@@ -67,61 +67,62 @@
     {% endif %}
     <div class="jumbotron" style="background-color: lightgrey">
         <div class="header">{{ header }}</div>
-
         <br>
-
-        <div class="display_table">
-            <table class='table'>
-                <thead>
+        {#        <div class="display_table">#}
+        <table class='table'>
+            <thead>
+            <tr>
+                <th>NAME</th>
+                <th>DATE_ADDED</th>
+                <th>ADDRESS</th>
+                <th>POSTCODE</th>
+                <th>IS ACTIVE</th>
+                <th>UPDATE INFO</th>
+                <th></th>
+            </tr>
+            </thead>
+            {% for instance in companies %}
                 <tr>
-                    <th>NAME</th>
-                    <th>DATE_ADDED</th>
-                    <th>ADDRESS</th>
-                    <th>POSTCODE</th>
-                    <th>IS ACTIVE</th>
-                    <th>UPDATE INFO</th>
-                    <th></th>
-                </tr>
-                </thead>
-                {% for instance in companies %}
-                    <tr>
-                        <td>{{ instance.name }}</td>
-                        <td>{{ instance.date_added }}</td>
-                        <td>{{ instance.address }}</td>
-                        <td>{{ instance.postcode }}</td>
-                        <td>{{ instance.is_active }}</td>
-                        <td><a href="{% url 'update_company' instance.id %}"><img
-                                src="{% static 'img/pencil-fill.svg' %}"></a></td>
-                        {% if instance.is_active %}
-                            <td><a href="{% url 'deactivate' instance.id %}" class="btn btn-danger">Deactivate</a></td>
-                        {% endif %}
-                        {% if instance.is_active != True %}
-                            <td></td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </table>
-            <br><br>
-            <div style="margin-left: 10px">
-                {% if companies.has_previous %}
-                    <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
-                    <a class="btn btn-outline-info mb-4"
-                       href="{% my_url companies.previous_page_number 'page' request.GET.urlencode %}">&laquoPrevious</a>
-                {% endif %}
-                {% for num in companies.paginator.page_range %}
-                    {% if companies.number == num %}
-                        <a class="btn btn-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
-                    {% elif num > companies.number|add:'-3' and num < prods.number|add:'3' %}
-                        <a class="btn btn-outline-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+                    <td>{{ instance.name }}</td>
+                    <td>{{ instance.date_added }}</td>
+                    <td>{{ instance.address }}</td>
+                    <td>{{ instance.postcode }}</td>
+                    <td>{{ instance.is_active }}</td>
+                    <td><a href="{% url 'update_company' instance.id %}"><img
+                            src="{% static 'img/pencil-fill.svg' %}"></a></td>
+                    {% if instance.is_active %}
+                        <td><a href="{% url 'deactivate' instance.id %}" class="btn btn-danger">Deactivate</a></td>
                     {% endif %}
-                {% endfor %}
-                {% if companies.has_next %}
-                    <a class="btn btn-outline-info mb-4" href="{% my_url companies.next_page_number 'page' request.GET.urlencode %}">Next&raquo</a>
-                    <a class="btn btn-outline-info mb-4" href="{% my_url companies.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
+                    {% if instance.is_active != True %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+        <br><br>
+        <div style="margin-left: 10px; margin-bottom: -60px">
+            {% if companies.has_previous %}
+                <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+                <a class="btn btn-outline-info mb-4"
+                   href="{% my_url companies.previous_page_number 'page' request.GET.urlencode %}">&laquoPrevious</a>
+            {% endif %}
+            {% for num in companies.paginator.page_range %}
+                {% if companies.number == num %}
+                    <a class="btn btn-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
+                {% elif num > companies.number|add:'-3' and num < prods.number|add:'3' %}
+                    <a class="btn btn-outline-info mb-4"
+                       href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
                 {% endif %}
-            </div>
-            <br>
+            {% endfor %}
+            {% if companies.has_next %}
+                <a class="btn btn-outline-info mb-4"
+                   href="{% my_url companies.next_page_number 'page' request.GET.urlencode %}">Next&raquo</a>
+                <a class="btn btn-outline-info mb-4"
+                   href="{% my_url companies.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
+            {% endif %}
         </div>
+        <br>
+        {#        </div>#}
     </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"

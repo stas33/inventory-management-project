@@ -53,26 +53,32 @@
 {% include 'navbar.html' %}
 
 <div class="row">
-    <p class="header" style="color: honeydew; text-shadow: none; margin-left: -10px; margin-top: 50px">{{ title }}</p>
+    <p class="header" style="color: honeydew; text-shadow: none; margin-left: -10px; margin-top: 50px; margin-bottom: -30px">{{ title }}</p>
     <div class="col-lg-12">
         <div class="box-element" style="margin-left: 50px; margin-right: 50px; margin-top: 100px">
             <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
                 margin-bottom: 10px; border-bottom: 1px solid #ececec">
 
-                <div style="flex:2"><strong>Customer Username</strong></div>
+                <div style="flex:1"><strong>Customer Username</strong></div>
                 <div style="flex:2"><strong>Customer Email</strong></div>
-                <div style="flex:1"><strong>Order Date</strong></div>
+                <div style="flex:2"><strong>Order Date</strong></div>
                 <div style="flex:1"><strong>Order Status</strong></div>
+                <div style="flex:1"><strong>Total</strong></div>
+                <div style="flex:1"><strong></strong></div>
+                <div style="flex:1"><strong></strong></div>
             </div>
 
             {% for order in orders %}
                 <div class="cart-row" style="display: flex; align-items: flex-start; padding-bottom: 10px;
                 margin-bottom: 10px; border-bottom: 1px solid #ececec">
 
-                    <div style="flex:2">{{ order.customer.name }}</div>
+                    <div style="flex:1">{{ order.customer.name }}</div>
                     <div style="flex:2">{{ order.customer.email }}</div>
-                    <div style="flex:1">{{ order.date_ordered }}</div>
+                    <div style="flex:2">{{ order.date_ordered }}</div>
                     <div style="flex:1">{{ order.status }}</div>
+                    <div style="flex:1">{{ order.get_cart_total|currency }}</div>
+                    <div style="flex:1"><a href="{% url 'order_items' order.id %}" class="btn btn-outline-info">Items</a></div>
+                    <div style="flex:1"><a href="{% url 'shipping_info' order.id %}" class="btn btn-outline-info">Shipping info</a></div>
                 </div>
             {% endfor %}
         </div>

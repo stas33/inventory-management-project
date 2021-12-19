@@ -1,6 +1,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
-{% load filter_pages %}
+{% load cart %}
 
 <!doctype html>
 <html lang="en">
@@ -65,64 +65,33 @@
 
         </div>
     {% endif %}
-    <div class="jumbotron" style="background-color: lightslategrey; color: white">
-        <h1 style="margin-top: -30px; margin-bottom: 30px; color: white">{{ title }}</h1>
-        <form method="get">
-            {{ filter.form.as_p }}
-            <button class="btn btn-primary" type="submit">Search</button>
-        </form>
-    </div>
 
-    <br>
+    <div class="row">
+        <p class="header"
+           style="color: honeydew; text-shadow: none; margin-left: -10px; margin-top: 50px">{{ header }}</p>
+        <div class="col-lg-12">
+            <div class="box-element" style="margin-left: 40px; margin-right: 40px; margin-top: 50px">
+                <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
+                margin-bottom: 10px; border-bottom: 1px solid #ececec">
+                    <div style="flex:1"><strong>Customer Username</strong></div>
+                    <div style="flex:1"><strong>Address</strong></div>
+                    <div style="flex:1"><strong>City</strong></div>
+                    <div style="flex:1"><strong>Phone</strong></div>
+                    <div style="flex:1"><strong>Latest changes</strong></div>
+                </div>
 
-    <div class="jumbotron" style="background-color: lightgrey">
-        <div class="header">{{ header }}</div>
-        <br>
-        <table class='table'>
-            <thead>
-            <tr>
-                <th>COUNT</th>
-                <th>FIRST NAME</th>
-                <th>LAST NAME</th>
-                <th>USERNAME</th>
-                <th>EMAIL</th>
-                <th>DATE JOINED</th>
-            </tr>
-            </thead>
-            {% for instance in custs %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ instance.first_name }}</td>
-                    <td>{{ instance.last_name }}</td>
-                    <td>{{ instance.username }}</td>
-                    <td>{{ instance.email }}</td>
-                    <td>{{ instance.date_joined }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-        <br><br>
-        <div style="margin-left: 10px; margin-bottom: -60px">
-            {% if custs.has_previous %}
-                <a class="btn btn-outline-info mb-4" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
-                <a class="btn btn-outline-info mb-4"
-                   href="{% my_url custs.previous_page_number 'page' request.GET.urlencode %}">&laquoPrevious</a>
-            {% endif %}
-            {% for num in custs.paginator.page_range %}
-                {% if custs.number == num %}
-                    <a class="btn btn-info mb-4" href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
-                {% elif num > custs.number|add:'-3' and num < custs.number|add:'3' %}
-                    <a class="btn btn-outline-info mb-4"
-                       href="{% my_url num 'page' request.GET.urlencode %}">{{ num }}</a>
-                {% endif %}
-            {% endfor %}
-            {% if custs.has_next %}
-                <a class="btn btn-outline-info mb-4"
-                   href="{% my_url custs.next_page_number 'page' request.GET.urlencode %}">Next&raquo</a>
-                <a class="btn btn-outline-info mb-4"
-                   href="{% my_url custs.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
-            {% endif %}
+                {% for item in queryset %}
+                    <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
+                margin-bottom: 10px; border-bottom: 1px solid #ececec">
+                        <div style="flex:1">{{ item.order.customer.name }}</div>
+                        <div style="flex:1">{{ item.address }}</div>
+                        <div style="flex:1">{{ item.city }}</div>
+                        <div style="flex:1">{{ item.phone }}</div>
+                        <div style="flex:1">{{ item.date_added }}</div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-        <br>
     </div>
 
 </main>
