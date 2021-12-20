@@ -77,8 +77,13 @@
                     <div style="flex:2">{{ order.date_ordered }}</div>
                     <div style="flex:1">{{ order.status }}</div>
                     <div style="flex:1">{{ order.get_cart_total|currency }}</div>
-                    <div style="flex:1"><a href="{% url 'order_items' order.id %}" class="btn btn-outline-info">Items</a></div>
-                    <div style="flex:1"><a href="{% url 'shipping_info' order.id %}" class="btn btn-outline-info">Shipping info</a></div>
+                    {% if order.get_cart_items != 0 %}
+                        <div style="flex:1"><a href="{% url 'order_items' order.id %}" class="btn btn-outline-info">Items</a></div>
+                        <div style="flex:1"><a href="{% url 'shipping_info' order.id %}" class="btn btn-outline-info">Shipping info</a></div>
+                    {% else %}
+                        <div style="flex:1"><strong></strong></div>
+                        <div style="flex:1"><strong></strong></div>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
