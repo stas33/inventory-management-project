@@ -61,6 +61,7 @@ def registerCustomerPage(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
+
             user = form.save()
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
@@ -72,9 +73,7 @@ def registerCustomerPage(request):
                 name=username,
                 email=email
             )
-
             messages.success(request, 'Account was created for customer: ' + username)
-
             return redirect('login')
 
     context = {'form': form}
