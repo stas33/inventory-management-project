@@ -15,6 +15,7 @@ class ProductCustomerFilter(django_filters.FilterSet):
         fields = ['prod_name', 'order']
 
 
+
 class ProductSearchFilter(django_filters.FilterSet):
     prod_name = django_filters.CharFilter(label='Product name', lookup_expr='icontains')
     #prod_name = django_filters.ModelChoiceFilter(queryset=Product.objects.all(), widget=autocomplete.ModelSelect2)
@@ -26,3 +27,4 @@ class ProductSearchFilter(django_filters.FilterSet):
     class Meta:
         model = Product
         fields = ['availability', 'prod_name']
+

@@ -115,7 +115,7 @@ def inactive_employees(request):
     header = 'Pending employee requests'
     # form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
-    queryset = User.objects.filter(is_active=False, groups__name='pending employee')
+    queryset = User.objects.filter(is_active=False, groups__name='pending employee').order_by('id')
     filter = EmployeeSearchFilter(request.GET, queryset=queryset)
     title = 'Advanced Search'
     empl_paginator = Paginator(filter.qs, 2)
@@ -138,7 +138,7 @@ def inactive_managers(request):
     header = 'Pending manager requests'
     # form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
-    queryset = User.objects.filter(is_active=False, groups__name='pending manager')
+    queryset = User.objects.filter(is_active=False, groups__name='pending manager').order_by('id')
     filter = ManagerSearchFilter(request.GET, queryset=queryset)
     title = 'Advanced Search'
     mgr_paginator = Paginator(filter.qs, 2)
@@ -229,7 +229,7 @@ def employees(request):
     header = 'Employees list'
     # form = EmployeeSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
-    queryset = User.objects.filter(groups__name='employee')
+    queryset = User.objects.filter(groups__name='employee').order_by('id')
     filter = EmployeeSearchFilter(request.GET, queryset=queryset)
     title = "Advanced Search"
     employees_paginator = Paginator(filter.qs, 2)
@@ -316,7 +316,7 @@ def customers(request):
     header = 'Registered customers'
     #form = CustomerSearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
-    queryset = User.objects.filter(groups__name='customer')
+    queryset = User.objects.filter(groups__name='customer').order_by('id')
     filter = CustomerSearchFilter(request.GET, queryset=queryset)
     title = "Advanced Search"
     cust_paginator = Paginator(filter.qs, 2)
@@ -360,7 +360,7 @@ def choose_categories(request):
 @allowed_users(allowed_roles=['admin', 'customer'])
 def product_list_customer(request, pk):
     category = Category.objects.get(id=pk)
-    queryset = Product.objects.filter(category__id=pk)
+    queryset = Product.objects.filter(category__id=pk).order_by('id')
 
     filter = ProductCustomerFilter(request.GET, queryset=queryset)
     #print(filter.form.cleaned_data.get('order'))

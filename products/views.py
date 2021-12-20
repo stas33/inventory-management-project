@@ -32,7 +32,7 @@ def categories(request):
 def product_list(request, pk):
     category = Category.objects.get(id=pk)
     header = f"Products of category {category.name}"
-    queryset = Product.objects.filter(category__id=pk)
+    queryset = Product.objects.filter(category__id=pk).order_by('id')
     for prod in queryset:
         if prod.quantity == 0:
             messages.warning(request, f"The quantity of product {prod.prod_name} is zero!")

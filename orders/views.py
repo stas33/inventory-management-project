@@ -26,7 +26,7 @@ def orders(request):
     # form = OrderSearchForm(request.POST or None)
     # queryset = Order.objects.filter(user__groups__name='customer',
     #                                 )
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().order_by('id')
     filter = OrderSearchFilter(request.GET, queryset=queryset)
     title = "Advanced Search"
     order_paginator = Paginator(filter.qs, 2)

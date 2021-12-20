@@ -18,7 +18,7 @@ def company(request):
     header = 'Companies details'
     #form = CompanySearchForm(request.POST or None)
     # group = request.user.groups.all().name == "customer"
-    queryset = Company.objects.all()
+    queryset = Company.objects.all().order_by('id')
     comp_paginator = Paginator(queryset, 2)
     page = request.GET.get('page')
     companies = comp_paginator.get_page(page)
