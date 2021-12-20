@@ -175,7 +175,13 @@ def activate_user(request, pk):
             if group == 'pending employee':
                 # form1 = ChooseCompanyForm(request.POST, instance=queryset1)
                 activate_group = Group.objects.get(id=3)
-                queryset.groups.add(activate_group)
+                #queryset.groups.add(activate_group)
+
+                new_group = User.groups.through.objects.get(user=queryset)
+                new_group.group = activate_group
+                new_group.save()
+                #print(queryset.groups.all())
+
                 compid = form1['name'].value()
                 employee = Employee(user=User(id=pk), company=Company(id=compid))
                 queryset.save()
@@ -184,7 +190,11 @@ def activate_user(request, pk):
                 return redirect('/inactive_employees')
             else:
                 activate_group = Group.objects.get(id=2)
-                queryset.groups.add(activate_group)
+                #queryset.groups.add(activate_group)
+                new_group = User.groups.through.objects.get(user=queryset)
+                new_group.group = activate_group
+                new_group.save()
+
                 queryset.save()
                 messages.success(request, 'Manager activated successfully!')
                 return redirect('/inactive_managers')
