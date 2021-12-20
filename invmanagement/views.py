@@ -180,7 +180,7 @@ def activate_user(request, pk):
                 new_group = User.groups.through.objects.get(user=queryset)
                 new_group.group = activate_group
                 new_group.save()
-                #print(queryset.groups.all())
+
 
                 compid = form1['name'].value()
                 employee = Employee(user=User(id=pk), company=Company(id=compid))
