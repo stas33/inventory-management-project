@@ -116,6 +116,9 @@ def update_order(request, pk):
                     if prod.quantity > 0:
                         prod.quantity = (prod.quantity - item.quantity)
                         prod.save()
+            #new_status = Order.through.objects.get(id=pk)
+            queryset.status = form.cleaned_data.get("status")
+            queryset.save()
             form.save()
             messages.success(request, 'Order status updated successfully!')
             return redirect('/orders_list')
