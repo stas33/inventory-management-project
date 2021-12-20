@@ -68,7 +68,7 @@ from products.views import (
     create_product,
     update_product,
     delete_product,
-    ProductAutocomplete
+    # ProductAutocomplete
 )
 
 urlpatterns = [
@@ -76,7 +76,7 @@ urlpatterns = [
     path('register-customer/', registerCustomerPage, name="register-customer"),
     path('login/', loginPage, name="login"),
     path('logout/', logoutUser, name="logout"),
-    url(r'^product-autocomplete/$', ProductAutocomplete.as_view(), name='product-autocomplete'),
+    #url(r'^product-autocomplete/$', ProductAutocomplete.as_view(), name='product-autocomplete'),
     # url(r'^customer-autocomplete/$', CustomerAutocomplete.as_view(), name='customer-autocomplete'),
     path('admin/', admin.site.urls),
     path('', home, name='home'),
