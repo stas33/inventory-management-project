@@ -122,11 +122,11 @@ def delete_product(request, pk):
     return render(request, 'products/delete_product.html')
 
 
-class ProductAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        # if not self.request.user.is_authenticated():
-        #     return Product.objects.none()
-        qs = Product.objects.all()
-        if self.q:
-            qs = qs.filter(prod_name__istartswith=self.q)
-        return qs
+# class ProductAutocomplete(autocomplete.Select2QuerySetView):
+#     def get_queryset(self):
+#         # if not self.request.user.is_authenticated():
+#         #     return Product.objects.none()
+#         qs = Product.objects.all()
+#         if self.q:
+#             qs = qs.filter(prod_name__istartswith=self.q)
+#         return qs
