@@ -15,6 +15,7 @@ from django.http import JsonResponse
 import json
 from django.core.paginator import Paginator
 from dal import autocomplete
+import smtplib
 
 
 # Create your views here.
@@ -117,16 +118,39 @@ def update_order(request, pk):
                         prod.quantity = (prod.quantity - item.quantity)
                         prod.save()
             #new_status = Order.through.objects.get(id=pk)
+            mail = queryset.customer.email
+            status = form.cleaned_data.get("status")
+            order_id = queryset.transaction_id
+            customer_name = queryset.customer.name
+            send_mail(status, order_id, mail, customer_name)
             queryset.status = form.cleaned_data.get("status")
             queryset.save()
             form.save()
-            messages.success(request, 'Order status updated successfully!')
+            messages.success(request, f'Order status updated successfully! Email sent to customer {queryset.customer.name}')
             return redirect('/orders_list')
     context = {
         'title': title,
         'form': form
     }
     return render(request, 'orders/create_order.html', context)
+
+
+def send_mail(status, order_id, mail, customer_name):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+    server.login('sendmailnotification8@gmail.com', 'anjdwsfdpqxngngt')
+    subject = f"Status update for order {order_id} of customer {customer_name}"
+    body = f"The status for your order has been changed. Current status: {status}"
+    msg = f"Subject: {subject}\n\n{body}"
+    server.sendmail(
+        'sendmailnotification8@gmail.com',
+        f'{mail}',
+        msg
+    )
+    print("Email has been sent!")
+    server.quit()
 
 
 @login_required(login_url='login')
@@ -230,12 +254,31 @@ def processOrder(request):
             phone=data['shipping']['phone'],
         )
         #Order.objects.
-
+    send_order_confirmation(order.status, order.transaction_id, order.customer.email, order.customer.name)
     items = []
     #cartItems = order.get_cart_items
 
     return JsonResponse('Completed!', safe=False)
-    #return redirect("/customer/myorders/")
+
+
+def send_order_confirmation(status, order_id, mail, customer_name):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+    server.login('sendmailnotification8@gmail.com', 'anjdwsfdpqxngngt')
+    subject = f"Order confirmation of customer {customer_name}"
+    body = f"You have successfully created/modified an order with id {order_id}!"
+    body2 = f"Once order status is changed, you will receive another email."
+    body3 = f"Current order status: {status}"
+    msg = f"Subject: {subject}\n\n{body}\n{body2}\n{body3}"
+    server.sendmail(
+        'sendmailnotification8@gmail.com',
+        f'{mail}',
+        msg
+    )
+    print("Email has been sent!")
+    server.quit()
 
 
 @login_required(login_url='login')
