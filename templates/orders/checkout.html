@@ -55,43 +55,47 @@
 
 <div class="row">
     <div class="col-lg-6">
-        <div class="box-element" id="form-wrapper" style="margin-top: 40px; margin-left: 150px; margin-right: 150px">
+        <div class="box-element" id="form-wrapper" style="margin-top: 40px; margin-left: 80px; margin-right: 80px">
             <form id="form">
 
                 <div id="shipping-info">
                     <hr>
                     <p><strong>Shipping Information:</strong></p>
                     <hr>
-                    <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
-                        <input class="form-control" type="text" name="address" placeholder="Address..">
+                    <h6>Address: <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
+                        <input class="form-control" type="text" name="address" placeholder="Address.." required>
+                    </div></h6>
+                    <h6>City:    <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
+                        <input class="form-control" type="text" name="city" placeholder="City.." required>
+                    </div></h6>
+                    <h6>Phone: <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
+                        <input class="form-control" type="text" name="phone" placeholder="Phone.." required>
+                    </div></h6>
+                    <div>
+                        <input style="margin-top: 20px" id="form-button" class="btn btn-success btn-block" type="submit" value="Proceed to payment options">
                     </div>
-                    <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
-                        <input class="form-control" type="text" name="city" placeholder="City..">
-                    </div>
-                    <div class="form-field" style="width: 250px; display: inline-block; padding: 5px">
-                        <input class="form-control" type="text" name="phone" placeholder="Phone..">
-                    </div>
-
                 </div>
-
                 <hr>
-                <input id="form-button" class="btn btn-success btn-block" type="submit"
-                       value="Place order">
+                <div class="box-element" id="payment-info" style="display: none">
+                    <p><strong>Payment Options:</strong></p>
+                    <div id="paypal-button-container"></div>
+                </div>
             </form>
         </div>
+        <br>
 
     </div>
 
     <div class="col-lg-6">
         <div class="box-element" style="margin-top: 40px; margin-left: 90px; margin-right: 90px">
-            <a class="btn btn-outline-dark" href="{% url 'mycart' %}">&#x2190; Back to Cart</a>
+            <a class="btn btn-secondary" href="{% url 'mycart' %}">&#x2190; Back to Cart</a>
             <hr>
             <h3>Order Summary</h3>
             <hr>
             {% for item in items %}
                 <div class="cart-row" style="display: flex; align-items: flex-end; padding-bottom: 10px;
                 margin-bottom: 10px; border-bottom: 1px solid #ececec">
-                    <div style="flex:2"><img style="width: 100px" src="{{ item.product.imageURL }}"></div>
+                    <div style="flex:3"><img style="width: 100px" src="{{ item.product.imageURL }}"></div>
                     <div style="flex:2"><p>{{ item.product.prod_name }}</p></div>
                     <div style="flex:2"><p>{{ item.product.category }}</p></div>
                     <div style="flex:2"><p>{{ item.product.price|currency }}</p></div>
@@ -117,6 +121,35 @@
 
 <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
 
+<script src="https://www.paypal.com/sdk/js?client-id=AayGTfuTz0NXtLMuU6ZrzPVpRZKAOIKzxo-S6iGwhBy_M4fZlYS3r5pMhHipt_fn3t7RTYJjGCAGtmwy&currency=USD"></script>
+
+<script>
+    var total = '{{ order.get_cart_total }}'
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+        style: {
+            color: 'blue',
+            shape: 'rect',
+        },
+        // Set up the transaction
+        createOrder: function (data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: parseFloat(total).toFixed(2)
+                    }
+                }]
+            });
+        },
+        // Finalize the transaction
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function (orderData) {
+                // Successful capture!
+                submitFormData()
+            });
+        }
+    }).render('#paypal-button-container');
+</script>
 
 <script type="text/javascript">
 
@@ -140,22 +173,29 @@
 
     var csrftoken = getToken('csrftoken')
 
-
     console.log('Continue1 button clicked')
     var shipping = '{{ order.shipping }}'
-    var total = '{{ order.get_cart_total|currency }}'
+
     if (shipping == 'False') {
         document.getElementById('shipping-info').innerHTML = ''
+        //document.getElementById('form-button').classList.add('hidden')
+        //document.getElementById('payment-info').classList.remove('hidden')
+
     }
     var form = document.getElementById('form')
     form.addEventListener('submit', function (e) {
         e.preventDefault()
+        document.getElementById('form-button').disabled = true
+        document.getElementById('payment-info').style.display = "block"
         console.log('Form Submitted...')
     })
-    document.getElementById('form-button').addEventListener('click', function (e) {
+    /* document.getElementById('form-button').addEventListener('click', function (e) {
         e.preventDefault()
         submitFormData()
     })
+    document.getElementById('make-payment').addEventListener('click', function (e){
+        submitFormData()
+    }) */
 
     function submitFormData() {
         console.log('Continue button clicked')
