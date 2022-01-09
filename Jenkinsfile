@@ -7,7 +7,6 @@ pipeline {
                 // Get some code from a GitHub repository
                 git branch: 'test1', url: 'https://github.com/stas33/inventory-management-project.git'
 
-
             }
         }
         stage('Test') {

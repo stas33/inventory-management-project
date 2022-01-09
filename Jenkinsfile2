@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone') {
+            steps {
+                // Get some code from a GitHub repository
+                git branch: 'test1', url: 'https://github.com/stas33/inventory-management-project.git'
+
+            }
+        }
+
+        stage('Build & Deploy') {
+            steps {
+                sshagent (credentials: ['ssh-deployment1']) {
+                sh '''
+                    pwd
+                    echo $WORKSPACE
+                    docker-compose up
+                    '''
+                }
+            }
+        }
+    }
+}

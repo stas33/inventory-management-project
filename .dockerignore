@@ -1,0 +1,10 @@
+*.pyc
+*.pyo
+*.mo
+*.db
+env
+Dockerfile
+Jenkinsfile
+Jenkinsfile2
+README.md
+*.sqlite3
