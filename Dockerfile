@@ -8,7 +8,7 @@ COPY . ./
 
 RUN pip install -r requirements.txt
 
-RUN  python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000/tcp
 
