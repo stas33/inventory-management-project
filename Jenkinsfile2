@@ -17,7 +17,7 @@ pipeline {
                     ssh jenkins@20.107.70.51
                     pwd
                     echo $WORKSPACE
-
+                    docker-compose up -d
                     '''
                 }
             }
