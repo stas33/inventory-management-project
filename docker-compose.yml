@@ -2,7 +2,6 @@ version: "3"
 
 services:
   db:
-    user: 1000:1000
     image: postgres:13
     ports:
       - "5432:5432"
@@ -13,7 +12,6 @@ services:
     volumes:
       - dj_postgres_data:/var/lib/postgresql/data/
   django:
-    user: 1000:1000
     build:
       context: .
       dockerfile: Dockerfile
