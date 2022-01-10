@@ -12,9 +12,10 @@ services:
     volumes:
       - dj_postgres_data:/var/lib/postgresql/data/
   django:
+    user: 1000:1000
     build:
       context: .
-      dockerfile: nonroot.Dockerfile
+      dockerfile: Dockerfile
     env_file:
      - ./inventoryproject/.env
     ports:
