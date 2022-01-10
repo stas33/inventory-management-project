@@ -14,10 +14,7 @@ pipeline {
             steps {
                 sshagent (credentials: ['ssh-deployment2']) {
                 sh '''
-                    ssh jenkins@20.107.70.51
-                    pwd
-                    echo $WORKSPACE
-                    docker ps
+                    ssh jenkins@20.107.70.51 "docker --version"
                     '''
                 }
             }
