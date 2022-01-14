@@ -9,6 +9,7 @@ pipeline {
 
             }
         }
+
         stage('Test') {
             steps {
                 sh '''
@@ -42,7 +43,9 @@ pipeline {
         stage('Deploy to K8s') {
             steps {
                 sh '''
-                kubectl get pods
+                kubectl config use-context microk8s
+                cd k8s/db
+                ls *.yaml | while read x; do kubectl apply -f $x; done
                 '''
             }
         }
