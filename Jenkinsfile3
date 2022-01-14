@@ -46,6 +46,8 @@ pipeline {
                 kubectl config use-context microk8s
                 cd k8s/db
                 ls *.yaml | while read x; do kubectl apply -f $x; done
+                cd ../django
+                ls *.yaml | while read x; do kubectl apply -f $x; done
                 '''
             }
         }
