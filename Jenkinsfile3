@@ -21,9 +21,20 @@ pipeline {
         }
 
         stage('Docker build & push image') {
+            environment {
+                IMAGE='stas33/django'
+                DOCKER_USERNAME='stas33'
+                DOCKER_PASSWORD=credentials('docker-passwd')
+            }
             steps {
                 sh '''
-                docker build -t stas33/django .
+                echo $BUILD_ID
+                COMMIT_ID=$(git rev-parse --short HEAD)
+                echo $COMMIT_ID
+                TAG=$COMMIT_ID-$BUILD_ID
+                docker build -t $IMAGE -t $IMAGE:$TAG .
+                docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+                docker push $IMAGE --all-tags
                 '''
             }
         }
