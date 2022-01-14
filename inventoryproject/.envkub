@@ -1,0 +1,3 @@
+SECRET_KEY=test123
+DATABASE_URL=postgresql://dbuser:pass123@pg-cluster-ip/test_db
+ALLOWED_HOSTS=django.westeurope.cloudapp.azure.com
