@@ -1,0 +1,42 @@
+*Dummy Data*
+
+
+REGISTER USERS:
+
+Username      |   FirstName     |     LastName   |      Email     |     Password      |     Group
+-------------------------------------------------------------------------------------------------------
+<put username>   <put first name>  <put last name>     <put email>     <put password>       manager
+<put username>   <put first name>  <put last name>     <put email>     <put password>       manager
+<put username>   <put first name>  <put last name>     <put email>     <put password>       employee
+<put username>   <put first name>  <put last name>     <put email>     <put password>       employee
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+REGISTER CUSTOMERS:
+
+Username      |   FirstName     |     LastName   |      Email     |     Password
+----------------------------------------------------------------------------------------
+<put username>   <put first name>  <put last name>     <put email>     <put password>
+<put username>   <put first name>  <put last name>     <put email>     <put password>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+ADD PRODUCTS:
+
+Category    |           Name            |  Quantity |   Price   |   Image
+-----------------------------------------------------------------------------------------------------------
+Computers       Apple Macbook Pro 2021      45          1400        <upload image located in static/img>
+Computers       Apple Macbook Air 2021      55          999         <upload image located in static/img>
+Computers       Hp Pavilion                 80          700         <upload image located in static/img>
+Computers       Dell Inspiron 3505          25          650         <upload image located in static/img>
+Phones          IPhone 13                   80          1200        <upload image located in static/img>
+Phones          IPhone 11                   60          750         <upload image located in static/img>
+Phones          Samsung Galaxy S21         100         1100        <upload image located in static/img>
+TVs             LG C1                       50          1300        <upload image located in static/img>
+TVs             Samsung Qled 1802           90          650         <upload image located in static/img>
+TVs             Sony XR                     20          1400        <upload image located in static/img>
+Monitors        Apple Monitor               30          1500        <upload image located in static/img>
+Monitors        Samsung Monitor             120         750         <upload image located in static/img>
+IT Equipment    Sades Mousepad              60          20          <upload image located in static/img>
+IT Equipment    Razer Essential Mouse       35          50          <upload image located in static/img>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

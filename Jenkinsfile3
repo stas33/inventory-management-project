@@ -33,7 +33,7 @@ pipeline {
                 COMMIT_ID=$(git rev-parse --short HEAD)
                 echo $COMMIT_ID
                 TAG=$COMMIT_ID-$BUILD_ID
-                docker build -t $IMAGE -f nonroot.Dockerfile .
+                docker build -t $IMAGE -t $IMAGE:$TAG .
                 docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
                 docker push $IMAGE --all-tags
                 '''
