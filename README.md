@@ -1,4 +1,4 @@
-# This is the setup guide of the inventory management application.
+# This is the deployment guide of the inventory management application.
 # The application supports 4 options:
 * Running the project locally
 * Ansible deployment (through jenkins server)
@@ -37,41 +37,12 @@ DATABASE_URL=sqlite:///./db.sqlite3
 - Uncomment line 155
 - Comment out line 157
 ```
-##Run development server
+## Run development server
 ```bash
 python manage.py runserver
 ```
 # Option 2) Ansible deployment
-## Clone project locally
-```bash
-git clone https://github.com/stas33/inventory-management-project.git
-```
-## Edit inventoryproject/.env file to define
-```vim
-SECRET_KEY='test123'
-DATABASE_URL='postgres://dbuser:pass123@db:5432/test_db'
-```
-## Setup of vms, ssh keys, credentials, installation, pipeline
-- Ssh from local pc to the first virtual machine
-- Create ssh connection by generating a new ssh key
-- Install ansible in the first virtual machine (https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
-- Create a second virtual machine and add the ssh key
-- Add inbound port rules for ports 8000, 5432, 443, 80 in the second virtual machine
-- Ssh to the second virtual machine
-- Install ansible in the second virtual machine
-- Login to jenkins server (in first virtual machine)
-- Go to Dashboard->Manage Jenkins->Manage Credentials->Add
-- Select Ssh username with private key->Enter id, username and paste private key
-- Go to Dashboard->New Item->Pipeline project
-- Select Github hook trigger for GITScm polling
-- Select Definition->Pipeline script from SCM
-- Select Scm->Git
-- Paste repo url (https://github.com/stas33/inventory-management-project.git)
-- Set branch to main
-- Set script path to Jenkinsfile
-- Click save and build
-- Run http://<put second virtual machine's ip here>:8000/
-- Go to the project's repo in the second virtual machine and run  python manage.py create superuser
+- Check README file of repository https://github.com/stas33/ansible-inventory-management-system/tree/ansible-test1 
 
 # Option 3) Docker deployment
 ## Clone project locally
