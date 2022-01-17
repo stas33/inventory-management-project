@@ -1,16 +1,6 @@
 from django.db import models
 import datetime
 
-# Create your models here.
-# category_choice = (
-#         ('Pc', 'Pc'),
-#         ('Keyboard', 'Keyboard'),
-#         ('Phone', 'Phone'),
-#         ('Mouse', 'Mouse'),
-#         ('Speaker', 'Speaker'),
-#         ('Monitor', 'Monitor'),
-#         ('IT Equipment', 'IT Equipment'),
-#     )
 class Category(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     def __str__(self):
