@@ -165,7 +165,7 @@ python manage.py createsuperuser
 - Go to Dashboard->New Item->Pipeline project
 - Select Github hook trigger for GITScm polling
 - Select Definition->Pipeline script from SCM
-- Select Scm->Git
+- Select SCM->Git
 - Paste repo url (https://github.com/stas33/inventory-management-project.git)
 - Set branch to main
 - Set script path to Jenkinsfile3

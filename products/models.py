@@ -8,7 +8,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    #category = models.CharField(max_length=50, blank=False, choices=category_choice)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=False, null=True)
     prod_name = models.CharField(max_length=50, blank=False, null=True)
     quantity = models.IntegerField(default='0', blank=False, null=True)
@@ -16,7 +15,6 @@ class Product(models.Model):
     last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     price = models.IntegerField(default=0, blank=False)
     image = models.ImageField(null=True, blank=True)
-    #timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 
     def __str__(self):
         return self.prod_name
