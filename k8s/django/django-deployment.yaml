@@ -17,6 +17,10 @@ spec:
 #          image: stas33/django
 #          command: ["/bin/bash"]
 #          args: ["-c", "python manage.py makemigrations && python manage.py migrate"]
+      volumes:
+        - name:  django-img-persistent-volume-storage
+          persistentVolumeClaim:
+            claimName: django-pvc-claim
       containers:
         - name: django
           image: stas33/django
@@ -26,3 +30,7 @@ spec:
             - configMapRef:
                 name: django-config
           imagePullPolicy: Always
+          volumeMounts:
+            - name: django-img-persistent-volume-storage
+              mountPath: /Users/anastasisgkikas/Dissertation/inventory-project/inventoryproject/static/img
+#              subPath: postgres
