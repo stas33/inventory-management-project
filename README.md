@@ -16,7 +16,7 @@
 - Login to github and add a webhook
 
 # Option 1) Run the project locally
-##  Clone & run project locally
+##  Clone & run the project locally
 ```bash
 git clone https://github.com/stas33/inventory-management-project.git
 python -m venv env
@@ -27,6 +27,7 @@ python manage.py makemigrations
 python manage.py migrate
 python manage.py createsuperuser
 ```
+
 ## Edit inventoryproject/.env file to define
 ```vim
 SECRET_KEY='test123'
