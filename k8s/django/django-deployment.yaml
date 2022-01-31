@@ -32,5 +32,5 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
             - name: django-app-persistent-volume-storage
-              mountPath: /Users/anastasisgkikas/Dissertation/inventory-project/inventoryproject/static/img:/app/static/img
+              mountPath: /Users/anastasisgkikas/Dissertation/inventory-project/inventoryproject/static/img
 #              subPath: postgres
