@@ -24,7 +24,7 @@ Username      |   FirstName     |     LastName   |      Email     |     Password
 ADD PRODUCTS:
 
 Category    |           Name            |  Quantity |   Price   |   Image
------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
 Computers       Apple Macbook Pro 2021      45          1400        <upload image located in static/img>
 Computers       Apple Macbook Air 2021      55          999         <upload image located in static/img>
 Computers       Hp Pavilion                 80          700         <upload image located in static/img>
