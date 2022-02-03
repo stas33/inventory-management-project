@@ -18,15 +18,11 @@ from dal import autocomplete
 import smtplib
 
 
-# Create your views here.
-
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'employee'])
 def orders(request):
     header = 'Submitted orders'
-    # form = OrderSearchForm(request.POST or None)
-    # queryset = Order.objects.filter(user__groups__name='customer',
-    #                                 )
+
     queryset = Order.objects.all().order_by('id')
     filter = OrderSearchFilter(request.GET, queryset=queryset)
     title = "Advanced Search"
@@ -35,24 +31,13 @@ def orders(request):
     ord = order_paginator.get_page(page)
 
     context = {
-        # "form": form,
         "header": header,
         "queryset": queryset,
         "filter": filter,
         "title": title,
         "ord": ord,
     }
-    # if request.method == 'POST':
-    #     # queryset = Order.objects.filter(user__in=form['user'].value(),
-    #     #                               user__groups__name='customer')
-    #     queryset = Order.objects.filter(status__contains=form['status'].value(),
-    #                                     user__groups__name='customer')
-    #     # form.fields['customer'].queryset = User.objects.filter()
-    #     context = {
-    #         "form": form,
-    #         "header": header,
-    #         "queryset": queryset,
-    #     }
+
     return render(request, "orders/list_orders.html", context)
 
 
@@ -60,13 +45,9 @@ def orders(request):
 @allowed_users(allowed_roles=['admin', 'employee', 'customer'])
 def order_items(request, pk):
     header = f'Items of order with id { {pk} }'
-    # form = OrderSearchForm(request.POST or None)
-    # queryset = Order.objects.filter(user__groups__name='customer',
-    #                                 )
     queryset = OrderItem.objects.filter(order__id=pk)
 
     context = {
-        # "form": form,
         "header": header,
         "queryset": queryset,
     }
@@ -117,7 +98,7 @@ def update_order(request, pk):
                     if prod.quantity > 0:
                         prod.quantity = (prod.quantity - item.quantity)
                         prod.save()
-            #new_status = Order.through.objects.get(id=pk)
+
             mail = queryset.customer.email
             status = form.cleaned_data.get("status")
             order_id = queryset.transaction_id
@@ -156,12 +137,7 @@ def send_mail(status, order_id, mail, customer_name):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'customer'])
 def mycart(request):
-    # cart_product_id = list(request.session.get('cart').keys())
-    # customer = request.user.customer
-    # order, created = Order.objects.get_or_create(customer=customer, status='Pending')
-    # #items = Product.get_products_by_id(cart_product_id)
-    # items = OrderItem.orderitems_by_product_id(cart_product_id)
-    # return render(request, 'orders/my_cart.html', {'items': items, 'order': order})
+
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, status='Pending')
@@ -176,9 +152,6 @@ def mycart(request):
 
     context = {'items': items, 'order': order, 'cartItems': cartItems}
     return render(request, 'orders/my_cart.html', context)
-    # cart_product_id = list(request.session.get('cart').keys())
-    # cart_product = Product.get_products_by_id(cart_product_id)
-    # return render(request, 'orders/my_cart.html', {'cart_product': cart_product, 'order': order})
 
 
 @login_required(login_url='login')
@@ -187,11 +160,7 @@ def checkout(request):
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, status='Pending')
-    # order, created = Order.objects.filter(customer=customer, status='Pending')
-    # if not orders.exists():
-    #     order, created = Order.objects.create(customer=customer, status='Pending')
-    # else:
-    #     order, created = orders.last()
+
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
@@ -253,10 +222,8 @@ def processOrder(request):
             city=data['shipping']['city'],
             phone=data['shipping']['phone'],
         )
-        #Order.objects.
     send_order_confirmation(order.status, order.transaction_id, order.customer.email, order.customer.name)
     items = []
-    #cartItems = order.get_cart_items
 
     return JsonResponse('Completed!', safe=False)
 
@@ -284,13 +251,7 @@ def send_order_confirmation(status, order_id, mail, customer_name):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'customer'])
 def orderpage(request):
-    # user = request.user.id
-    # order = Order.get_order_by_customer(user)
-    # print(order)
     customer = request.user.customer
     title = f"Orders of Customer { customer.name }"
-    # customer_id
     orders = Order.objects.filter(customer=customer)
-    # orderItems = OrderItem.objects.filter(order__customer=customer)
     return render(request, 'orders/myorders.html', {'orders': orders, 'title': title})
-

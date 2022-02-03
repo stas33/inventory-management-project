@@ -20,8 +20,6 @@ from django.core.paginator import Paginator
 from dal import autocomplete
 
 
-# Create your views here.
-
 @unauthenticated_user
 def registerPage(request):
     form = CreateUserForm()
@@ -34,8 +32,7 @@ def registerPage(request):
             username = form.cleaned_data.get('username')
             reg_user = get_user_model().objects.get(username=username)
             reg_user.is_active = False
-            # group = Group.objects.get(name='customer')
-            # user.groups.add(group)
+
             group = form1['group'].value()
             if group == '3':
                 submitted_group = Group.objects.get(id=5)
@@ -92,10 +89,7 @@ def loginPage(request):
             group = None
             if user.groups.exists():
                 group = request.user.groups.all()[0].name
-                # if user.is_super:
-                #    return redirect('homePage_customers')
-            # if user.groups.all()[0].name == 'customer':
-            #     redirect('choose_categories')
+
             return redirect('home')
         else:
             messages.info(request, 'Username OR password is incorrect')
@@ -113,8 +107,7 @@ def logoutUser(request):
 @allowed_users(allowed_roles=['admin'])
 def inactive_employees(request):
     header = 'Pending employee requests'
-    # form = CustomerSearchForm(request.POST or None)
-    # group = request.user.groups.all().name == "customer"
+
     queryset = User.objects.filter(is_active=False, groups__name='pending employee').order_by('id')
     filter = EmployeeSearchFilter(request.GET, queryset=queryset)
     title = 'Advanced Search'
@@ -136,8 +129,7 @@ def inactive_employees(request):
 @allowed_users(allowed_roles=['admin'])
 def inactive_managers(request):
     header = 'Pending manager requests'
-    # form = CustomerSearchForm(request.POST or None)
-    # group = request.user.groups.all().name == "customer"
+
     queryset = User.objects.filter(is_active=False, groups__name='pending manager').order_by('id')
     filter = ManagerSearchFilter(request.GET, queryset=queryset)
     title = 'Advanced Search'
@@ -167,20 +159,13 @@ def activate_user(request, pk):
         # form = ActivateUserForm(request.POST, instance=queryset)
         if form1.is_valid():
             queryset.is_active = True
-            # group = form['group'].value()
             group = 'pending employee'.join(map(str, queryset.groups.all()))
-            # queryset.groups.add(group)
-            # queryset.save()
-            # form.save()
             if group == 'pending employee':
-                # form1 = ChooseCompanyForm(request.POST, instance=queryset1)
                 activate_group = Group.objects.get(id=3)
-                #queryset.groups.add(activate_group)
 
                 new_group = User.groups.through.objects.get(user=queryset)
                 new_group.group = activate_group
                 new_group.save()
-
 
                 compid = form1['name'].value()
                 employee = Employee(user=User(id=pk), company=Company(id=compid))
@@ -190,7 +175,6 @@ def activate_user(request, pk):
                 return redirect('/inactive_employees')
             else:
                 activate_group = Group.objects.get(id=2)
-                #queryset.groups.add(activate_group)
                 new_group = User.groups.through.objects.get(user=queryset)
                 new_group.group = activate_group
                 new_group.save()
@@ -200,7 +184,6 @@ def activate_user(request, pk):
                 return redirect('/inactive_managers')
     context = {
         'title': title,
-        # 'form': form,
         'form1': form1
     }
     return render(request, 'users/activate_user.html', context)
@@ -237,8 +220,7 @@ def home(request):
 @allowed_users(allowed_roles=['admin', 'manager'])
 def employees(request):
     header = 'Employees list'
-    # form = EmployeeSearchForm(request.POST or None)
-    # group = request.user.groups.all().name == "customer"
+
     queryset = User.objects.filter(groups__name='employee').order_by('id')
     filter = EmployeeSearchFilter(request.GET, queryset=queryset)
     title = "Advanced Search"
@@ -246,7 +228,6 @@ def employees(request):
     page = request.GET.get('page')
     employees = employees_paginator.get_page(page)
 
-    # queryset = Employee.objects.filter(user__groups__name='employee')
     context = {
         "header": header,
         "title": title,
@@ -254,14 +235,7 @@ def employees(request):
         "queryset": queryset,
         "employees": employees,
     }
-    # if request.method == 'POST':
-    #     queryset1 = User.objects.filter(username__icontains=form['username'].value())
-    #     # form.fields['customer'].queryset = User.objects.filter()
-    #     context = {
-    #         "form": form,
-    #         "header": header,
-    #         "queryset": queryset,
-    #     }
+
     return render(request, "users/list_employees.html", context)
 
 
@@ -271,8 +245,7 @@ def create_employee(request):
     form1 = CreateUserForm(request.POST or None)
     form2 = CreateEmployeeForm2(request.POST or None)
     if form1.is_valid() and form2.is_valid():
-        # form.save()
-        # user = User.objects.get(username=request.POST.get('username'))
+
         username = request.POST.get('username')
         firstname = request.POST.get('first_name')
         lastname = request.POST.get('last_name')
@@ -286,7 +259,7 @@ def create_employee(request):
 
         userid = request.user.id
         companyid = request.POST.get('company')
-        # company=request.POST.get('company')
+
         empcreated = Employee(user=User(id=userid), company=Company(companyid))
         empcreated.save()
         messages.success(request, 'Employee created successfully!')
@@ -305,7 +278,6 @@ def create_employee(request):
 def update_employee(request, pk):
     title = "Update Employee"
     queryset = User.objects.get(id=pk)
-    # queryset = Employee.objects.get(id=pk)
     form = EmployeeUpdateForm(instance=queryset)
     if request.method == 'POST':
         form = EmployeeUpdateForm(request.POST, instance=queryset)
@@ -324,8 +296,7 @@ def update_employee(request, pk):
 @allowed_users(allowed_roles=['admin', 'employee'])
 def customers(request):
     header = 'Registered customers'
-    #form = CustomerSearchForm(request.POST or None)
-    # group = request.user.groups.all().name == "customer"
+
     queryset = User.objects.filter(groups__name='customer').order_by('id')
     filter = CustomerSearchFilter(request.GET, queryset=queryset)
     title = "Advanced Search"
@@ -340,14 +311,6 @@ def customers(request):
         "custs": custs
     }
 
-    # if request.method == 'POST':
-    #     queryset = User.objects.filter(email__icontains=form['email'].value())
-    #     # form.fields['customer'].queryset = User.objects.filter()
-    #     context = {
-    #         "form": form,
-    #         "header": header,
-    #         "queryset": queryset,
-    #     }
     return render(request, "users/list_customers.html", context)
 
 
@@ -356,12 +319,10 @@ def customers(request):
 def choose_categories(request):
     header = 'Select a product category'
     queryset = Category.objects.all()
-    # pc = Product.objects.filter(category__id='1')
-    # pc_count = pc.count()
+
     context = {
         "header": header,
         "queryset": queryset,
-        # "pc_count": pc_count
     }
     return render(request, "choose_categories.html", context)
 
@@ -373,21 +334,11 @@ def product_list_customer(request, pk):
     queryset = Product.objects.filter(category__id=pk).order_by('id')
 
     filter = ProductCustomerFilter(request.GET, queryset=queryset)
-    #print(filter.form.cleaned_data.get('order'))
-    #product_paginator = Paginator(queryset, 2)
-    # field = filter._meta.fields
-    # print(field)
+
     title = "Advanced Search"
     product_paginator = Paginator(filter.qs, 2)
     page = request.GET.get('page')
     prods = product_paginator.get_page(page)
-
-    # filter = ProductFilter(request.GET, queryset=prods)
-    # prods = filter.qs
-    # customer = request.user.customer
-    # order, created = Order.objects.get_or_create(customer=customer, status='Pending')
-    # items = order.orderitem_set.all()
-    # cartItems = order.get_cart_items
 
     context = {
         'queryset': queryset,
@@ -398,13 +349,3 @@ def product_list_customer(request, pk):
         # 'cartItems':cartItems
     }
     return render(request, "users/product_list_customer.html", context)
-
-
-# class CustomerAutocomplete(autocomplete.Select2QuerySetView):
-#     def get_queryset(self):
-#         # if not self.request.user.is_authenticated():
-#         #     return Product.objects.none()
-#         qs = Customer.objects.all()
-#         if self.q:
-#             qs = qs.filter(name__istartswith=self.q)
-#         return qs

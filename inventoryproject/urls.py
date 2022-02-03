@@ -76,8 +76,6 @@ urlpatterns = [
     path('register-customer/', registerCustomerPage, name="register-customer"),
     path('login/', loginPage, name="login"),
     path('logout/', logoutUser, name="logout"),
-    #url(r'^product-autocomplete/$', ProductAutocomplete.as_view(), name='product-autocomplete'),
-    # url(r'^customer-autocomplete/$', CustomerAutocomplete.as_view(), name='customer-autocomplete'),
     path('admin/', admin.site.urls),
     path('', home, name='home'),
     path('inactive_employees/', inactive_employees, name='inactive_employees'),
@@ -91,7 +89,6 @@ urlpatterns = [
 
     path('products/categories/', categories, name='categories'),
     path('products/categories/<str:pk>/', product_list, name='product_list'),
-    #path('products/', products, name='products'),
     path('create_product/', create_product, name='create_product'),
     path('update_product/<str:pk>/', update_product, name="update_product"),
     path('delete_product/<str:pk>/', delete_product, name="delete_product"),
@@ -101,20 +98,14 @@ urlpatterns = [
     path('companies/', company, name="company"),
     path('update_company/<str:pk>/', update_company, name="update_company"),
     path('deactivate/<str:pk>/', deactivate, name="deactivate"),
-
-    # path('home_customer/', homePage_customers, name="homePage_customers"),
     path('customer/products/choose_category/', choose_categories, name="choose_categories"),
-
     path('customer/products/choose_category/<str:pk>/', product_list_customer, name="product_list_customer"),
     path('customer/mycart/', mycart, name="mycart"),
     path('customer/checkout/', checkout, name="checkout"),
     path('customer/update_item/', updateItem, name="updateItem"),
     path('customer/process_order/', processOrder, name="processOrder"),
-    #path('cart/', cart, name="cart"),
-    #path('submit/', submit, name="submit"),
     path('customer/myorders/', orderpage, name='orderpage'),
-    #path('update_cart/', update_cart, name="update_cart"),
 ]
 
-#urlpatterns += staticfiles_urlpatterns()
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

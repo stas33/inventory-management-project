@@ -10,32 +10,22 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group, User
 from invmanagement.authentications import unauthenticated_user, allowed_users
 from django.core.paginator import Paginator
-# Create your views here.
+
 
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
 def company(request):
     header = 'Companies details'
-    #form = CompanySearchForm(request.POST or None)
-    # group = request.user.groups.all().name == "customer"
+
     queryset = Company.objects.all().order_by('id')
     comp_paginator = Paginator(queryset, 2)
     page = request.GET.get('page')
     companies = comp_paginator.get_page(page)
     context = {
-        #"form": form,
         "header": header,
         "queryset": queryset,
         "companies": companies,
     }
-    # if request.method == 'POST':
-    #     queryset = Company.objects.filter(name=form['name'].value())
-    #     # form.fields['customer'].queryset = User.objects.filter()
-    #     context = {
-    #         "form": form,
-    #         "header": header,
-    #         "queryset": queryset,
-    #     }
     return render(request, "companies/list_companies.html", context)
 
 
@@ -62,7 +52,6 @@ def update_company(request, pk):
 @allowed_users(allowed_roles=['admin', 'manager'])
 def deactivate(request, pk):
     queryset = Company.objects.get(id=pk)
-    #userid = request.user.id
     usr = User.objects.all().select_related('employee')
     emp = Employee.objects.values_list('user').filter(company__name__contains=queryset,
                                    user__in=usr)
@@ -77,8 +66,6 @@ def deactivate(request, pk):
         if queryset.is_active:
             queryset.is_active=False
             queryset.save()
-        #emp_query.delete()
-        #queryset.delete()
 
         messages.success(request, 'Company and its employees deactivated successfully!')
         return redirect('/companies')

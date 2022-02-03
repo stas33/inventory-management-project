@@ -24,20 +24,3 @@ def allowed_users(allowed_roles=[]):
 				return HttpResponse('You are not authorized to view this page')
 		return wrapper_func
 	return decorator
-
-#def check_group(view_func):
-#	def wrapper_function(request, *args, **kwargs):
-#		group = None
-#		if request.user.groups.exists():
-#			group = request.user.groups.all()[0].name
-#
-#		#if group == 'customer':
-#		#	return redirect('customer')
-#
-#		if group == 'manager':
-#			return redirect('manager')
-#
-#		if group == 'admin':
-#			return view_func(request, *args, **kwargs)
-#
-#	return wrapper_function

@@ -1,6 +1,5 @@
 from django.db import models
 import datetime
-# Create your models here.
 
 class Company(models.Model):
     name = models.CharField(max_length=50, blank=False, null=True)

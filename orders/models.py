@@ -4,7 +4,6 @@ import datetime
 from django.contrib.auth.models import User
 from products.models import Product
 from invmanagement.models import *
-# Create your models here.
 
 STATUS = (
          ('Pending', 'Pending'),
@@ -13,7 +12,6 @@ STATUS = (
          ('Processing', 'Processing'),
          ('Delivered', 'Delivered'),
      )
-
 
 User = get_user_model()
 
@@ -58,19 +56,6 @@ class OrderItem(models.Model):
         total = self.product.price * self.quantity
         return total
 
-    # @property
-    # def get_cart_quantity(self):
-    #     #keys = cart.keys()
-    #     keys = request.session.get('cart').keys()
-    #     cart = request.session.get('cart')
-    #     product = request.session.get('product')
-    #     for id in keys:
-    #         if int(id) == self.product.id:
-    #             return cart.get(id)
-    #     return 0
-
-    # def orderitems_by_product_id(cart_product_id):
-    #     return OrderItem.objects.filter(product__id__in=cart_product_id)
 
 class Shipping(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
