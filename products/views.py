@@ -78,7 +78,7 @@ def update_product(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Product updated successfully!')
-            return redirect(f'/products/categories/{pk}')
+            return redirect(f"/products/categories/{pk}")
     context = {
         'title': title,
         'form': form
