@@ -72,7 +72,7 @@ def create_product(request):
 def update_product(request, pk):
     title = "Update product"
     queryset = Product.objects.get(id=pk)
-    cat = queryset.category
+    category = queryset[0].category_id
     #category = Product.objects.filter(id=pk).values('category__id')
     form = ProductUpdateForm(instance=queryset)
     if request.method == 'POST':
@@ -80,7 +80,7 @@ def update_product(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, 'Product updated successfully!')
-            return redirect(f"/products/categories/{cat}")
+            return redirect(f"/products/categories/{category}")
     context = {
         'title': title,
         'form': form
