@@ -71,8 +71,10 @@ def create_product(request):
 @allowed_users(allowed_roles=['admin', 'manager'])
 def update_product(request, pk):
     title = "Update product"
+    categories = Category.objects.all()
     queryset = Product.objects.get(id=pk)
-    categ = queryset.category
+    #categ = queryset.category
+    categ = Product.objects.get(id=pk, category__id__in=categories)
 
     form = ProductUpdateForm(instance=queryset)
     if request.method == 'POST':
