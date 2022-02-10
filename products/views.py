@@ -72,7 +72,8 @@ def create_product(request):
 def update_product(request, pk):
     title = "Update product"
     queryset = Product.objects.get(id=pk)
-    category = queryset.category__id
+    #category = queryset.category_id
+    category = Product.objects.filter(id=pk).values('category__id')
     form = ProductUpdateForm(instance=queryset)
     if request.method == 'POST':
         form = ProductUpdateForm(request.POST, instance=queryset)
