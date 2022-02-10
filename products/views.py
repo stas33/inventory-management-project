@@ -73,7 +73,6 @@ def update_product(request, pk):
     title = "Update product"
     categories = Category.objects.all()
     queryset = Product.objects.get(id=pk)
-    #categ = queryset.category
     categ = Product.objects.get(id=pk, category__id__in=categories)
     id = categ.category.id
     form = ProductUpdateForm(instance=queryset)
@@ -93,9 +92,12 @@ def update_product(request, pk):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
 def delete_product(request, pk):
+    categories = Category.objects.all()
     queryset = Product.objects.get(id=pk)
+    categ = Product.objects.get(id=pk, category__id__in=categories)
+    id = categ.category.id
     if request.method == 'POST':
         queryset.delete()
         messages.success(request, 'Product deleted successfully!')
-        return redirect(f'/products/categories/{pk}')
+        return redirect(f'/products/categories/{id}')
     return render(request, 'products/delete_product.html')
