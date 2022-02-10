@@ -75,7 +75,7 @@ def update_product(request, pk):
     queryset = Product.objects.get(id=pk)
     #categ = queryset.category
     categ = Product.objects.get(id=pk, category__id__in=categories)
-    id = categ.category_id
+    id = categ.category.id
     form = ProductUpdateForm(instance=queryset)
     if request.method == 'POST':
         form = ProductUpdateForm(request.POST, instance=queryset)
