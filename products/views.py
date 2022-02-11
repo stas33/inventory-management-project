@@ -92,11 +92,8 @@ def update_product(request, pk):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin', 'manager'])
 def delete_product(request, pk):
-    categories = Category.objects.all()
-    categ = Product.objects.get(id=pk, category__id__in=categories)
-    categid = categ.category.id
+    queryset = Product.objects.get(id=pk)
     if request.method == 'POST':
-
         messages.success(request, 'Product deleted successfully!')
-        return redirect(f"/products/categories/{categid}")
+        return redirect('/products/categories/')
     return render(request, 'products/delete_product.html')
