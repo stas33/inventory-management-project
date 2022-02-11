@@ -97,6 +97,7 @@ def delete_product(request, pk):
     categ = Product.objects.get(id=pk, category__id__in=categories)
     id = categ.category.id
     if request.method == 'POST':
+        queryset.delete()
         messages.success(request, 'Product deleted successfully!')
         return redirect(f"/products/categories/{id}")
     return render(request, 'products/delete_product.html')
