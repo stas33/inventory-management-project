@@ -46,7 +46,7 @@ python manage.py runserver
 - Check README file of repository https://github.com/stas33/ansible-inventory-management-system/tree/ansible-test1 
 
 # Option 3) Docker deployment
-## Clone project locally
+## Clone the project locally
 ```bash
 git clone https://github.com/stas33/inventory-management-project.git
 ```
@@ -171,7 +171,7 @@ python manage.py createsuperuser
 - Set branch to main
 - Set script path to Jenkinsfile3
 - Click save and build
-- Run http://<put the domain name here>/
+- Run http://< put the domain name here >/
 
 # Dummy data instructions - Check also dummy_data.txt
 ## After running the project
